@@ -1,0 +1,361 @@
+# 🚀 PROMPT PENTAGI CHUẨN NHẤT (PRODUCTION-READY + ROE ĐÃ ĐIỀN)
+
+## 🔐 Đánh giá bảo mật được ủy quyền — tận dụng toàn bộ năng lực PentAGI
+
+---
+
+## 1. Thông tin đầu vào (bắt buộc)
+
+* **URL website (in-scope)**: 
+
+* **Tài khoản thử nghiệm**:
+
+  * Username: 
+  * Password: 
+
+* **Ghi chú bảo mật**:
+
+  * Credential chỉ dùng cho môi trường test
+  * Không lưu plaintext secret vào memory dài hạn
+  * Khi ghi báo cáo: mask hoặc dùng placeholder
+
+---
+
+## 2. Pháp lý và phạm vi (bắt buộc)
+
+* **Ủy quyền**: Có văn bản hợp lệ từ chủ hệ thống
+
+  * Ngày: 03/04/2026
+  * Engagement ID: Pentest-01
+
+* **In-scope**:
+
+  * Domain chính + subdomain liên quan
+  * API backend cùng hệ thống
+
+* **Out-of-scope**:
+
+  * Bên thứ ba
+  * Social engineering
+  * Physical attack
+  * DoS/DDoS
+  * Data exfiltration vượt mức PoC
+
+* **Rules of Engagement (RoE)**:
+
+```
+Tần suất scan:
+- Tối đa 5 request/giây mỗi endpoint
+- Fuzzing có kiểm soát (burst ≤ 20 request)
+- Không brute force liên tục quá 30 giây trên cùng chức năng
+
+Khung giờ:
+- 24/7 nếu môi trường staging/UAT
+- Nếu prod-like: ưu tiên 22:00 – 06:00
+
+Mức khai thác:
+- Cho phép exploit ở mức PoC (bao gồm chaining)
+- Không phá huỷ dữ liệu
+- Không thay đổi dữ liệu quan trọng
+- Không gây ảnh hưởng availability hệ thống
+
+Giới hạn bổ sung:
+- Không scan vào third-party (payment, OAuth, CDN)
+- Không gửi payload gây crash hệ thống
+- Không upload file độc hại thực thi thật (chỉ PoC)
+```
+
+---
+
+## 3. Bối cảnh hệ thống
+
+* **Loại hệ thống**: `[Web / SPA / API / Auth system / etc]`
+
+* **Môi trường**: `[staging / UAT / prod-like]`
+
+* **Tech stack (nếu biết)**:
+
+  * Framework:
+  * Auth: (JWT / OAuth2 / Session)
+  * WAF/CDN:
+
+* **Tài liệu**:
+
+  * OpenAPI / Swagger
+  * Flow auth
+  * Pentest report cũ
+
+---
+
+## 4. Chiến lược PentAGI (Agent Orchestration)
+
+### Primary Agent
+
+* Điều phối tổng thể
+* Tránh trùng lặp scan
+* Quyết định chiến lược
+
+### Pentester
+
+* Scan + validate vulnerability
+
+### Searcher
+
+* Tra CVE theo tech stack phát hiện
+
+### Coder
+
+* Viết PoC / exploit / fuzzer
+
+### Adviser
+
+* Đề xuất hướng mới khi bế tắc
+
+### Memorist
+
+* Lưu pattern hiệu quả (ẩn danh hóa)
+
+---
+
+## 5. Quy trình kiểm thử (BẮT BUỘC TUÂN THỦ)
+
+### 5.1 Lập kế hoạch & bộ nhớ
+
+* Nếu có Graphiti:
+
+  * Truy vấn lịch sử trước khi scan
+* Vector memory:
+
+  * Lưu kỹ thuật mới (ẩn danh hóa)
+  * Không lưu secret thật
+
+---
+
+### 5.2 Khám phá & MỞ RỘNG ATTACK SURFACE (QUAN TRỌNG)
+
+* Enumerate:
+
+  * Subdomain (nếu trong scope)
+  * Endpoint ẩn: `/api/v1`, `/v2`, `/internal`
+  * File nhạy cảm: `.env`, `.git`, `.bak`, `.old`
+
+* Thu thập:
+
+  * JavaScript → extract API/key/token
+  * robots.txt / sitemap
+
+* Fuzz:
+
+  * Parameter name/value
+  * JSON (nested, null, type confusion)
+
+---
+
+### 5.3 Phân tích Authentication & Session
+
+* Kiểm tra:
+
+  * Session fixation
+  * Token reuse
+  * JWT: decode / modify / alg=none / signature bypass
+
+---
+
+### 5.4 Kiểm thử AUTH & PHÂN QUYỀN (CRITICAL)
+
+Test cùng request với:
+
+* Không auth
+* User thường
+* Admin (nếu có)
+
+Kiểm tra:
+
+* Horizontal escalation (A → B)
+* Vertical escalation (user → admin)
+* IDOR / BOLA
+
+---
+
+### 5.5 API SECURITY (DEEP TEST)
+
+* REST:
+
+  * Fuzz JSON (nested, null, type confusion)
+* GraphQL:
+
+  * Introspection
+  * Query abuse / alias attack
+
+Kiểm tra:
+
+* Mass assignment
+* Broken Object Level Authorization (BOLA)
+
+---
+
+### 5.6 Kiểm thử VULNERABILITY (FULL COVERAGE)
+
+* Injection:
+
+  * SQL / NoSQL / Command / Template / LDAP
+
+* Web:
+
+  * XSS (stored / reflected / DOM)
+  * CSRF
+  * SSRF
+  * XXE
+  * Deserialization
+
+* File:
+
+  * Upload bypass
+  * Path traversal
+
+* Logic:
+
+  * Business logic flaw
+  * Rate limit bypass
+  * Race condition
+
+---
+
+### 5.7 STATEFUL & BUSINESS LOGIC TESTING
+
+* Multi-step flow:
+
+  * create → update → delete → reuse
+* Bypass:
+
+  * skip step
+  * replay request
+* Race condition:
+
+  * parallel request
+
+---
+
+### 5.8 WAF/CDN BYPASS
+
+* Encoding / double encode
+* Header manipulation (X-Forwarded-For, Host)
+* Payload obfuscation
+* So sánh response để detect filtering
+
+---
+
+### 5.9 VULNERABILITY CHAINING (RẤT QUAN TRỌNG)
+
+* IDOR → data leak → privilege escalation
+* SSRF → internal access → RCE
+
+👉 Báo cáo riêng các chain có impact cao
+
+---
+
+### 5.10 Khai thác (Controlled)
+
+* Chỉ PoC tối thiểu
+* Không phá hoại dữ liệu
+
+PentAGI constraints:
+
+* Không UDP scan
+* Không GUI
+* Command phải gộp (`cd ... && cmd`)
+* Path tuyệt đối
+* Metasploit:
+
+  ```
+  msfconsole -q -x "commands; exit"
+  ```
+
+---
+
+### 5.11 Coder Agent (BẮT BUỘC KHI CẦN)
+
+* Viết:
+
+  * Exploit script
+  * Payload generator
+  * Custom fuzzer
+
+👉 PoC phải chạy lại độc lập
+
+---
+
+## 6. Chuẩn báo cáo (CHO MỖI FINDING)
+
+* Title
+* Severity (CVSS nếu có)
+* Affected component
+* Preconditions
+
+### Reproduce:
+
+* HTTP request / command (mask secret)
+
+### Evidence:
+
+* Response / diff / log
+
+### Impact:
+
+* Kịch bản attacker thực tế
+
+### Fix:
+
+* Code-level hoặc config cụ thể
+
+### Extra:
+
+* False positive elimination
+* Retest guide
+
+---
+
+## 7. Deliverables
+
+* Executive summary
+* Risk overview (top risk)
+* Technical details
+* Findings table
+
+Bao gồm:
+
+* Đã test gì
+* Chưa test gì + lý do
+* Residual risk
+
+---
+
+## 8. Tiêu chí hoàn thành
+
+* Không vượt scope
+
+* Không lạm dụng credential
+
+* Tất cả finding:
+
+  * Verified
+  * Reproducible
+
+* Nếu không có lỗ hổng:
+
+  * Phải mô tả rõ đã test gì
+
+---
+
+## 9. Thực thi
+
+👉 Bắt đầu ngay:
+
+* Dùng full agent (Primary + Pentester + Coder + Searcher + Adviser)
+* Lặp: scan → verify → exploit → refine
+* Ưu tiên:
+
+  * Critical vulnerability
+  * Vulnerability chaining
+
+

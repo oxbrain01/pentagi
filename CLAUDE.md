@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Core Interaction Rules
 
-1. **Always use English** for all interactions, responses, explanations, and questions with users.
+<!-- 1. **Always use English** for all interactions, responses, explanations, and questions with users. -->
 2. **Password Complexity Requirements**: For all password-related development (registration, password reset, API token generation, etc.), the following rules must be enforced:
    - Minimum 12 characters
    - Must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character

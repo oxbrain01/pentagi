@@ -1847,7 +1847,7 @@ PentAGI supports 2 DeepSeek-V3.2 models with tool calling, streaming, thinking m
 - **Strong Coding**: Optimized for code generation and exploit development
 - **Tool Calling**: Seamless integration with 20+ pentesting tools via function calling
 - **Streaming**: Real-time response streaming for interactive workflows
-- **Multilingual**: Strong Chinese and English support
+- **Multilingual**: Strong Chinese and English support and Vietnamese
 - **Additional Features**: JSON Output, Chat Prefix Completion, FIM (Fill-in-the-Middle) Completion
 
 **LiteLLM Integration**: Set `DEEPSEEK_PROVIDER=deepseek` to enable model name prefixing when using default PentAGI configurations with LiteLLM proxy. Leave empty for direct API usage.
@@ -3359,3 +3359,7 @@ All third-party dependencies use MIT-compatible licenses. See [licenses/](licens
 The SDK code itself is free to use - service access requires registration.
 
 For questions contact: **info@pentagi.com** or **info@vxcontrol.com**
+
+
+OPEN_AI_KEY=dev-local-very-secret-key
+OPEN_AI_SERVER_URL=http://host.docker.internal:8317/v1

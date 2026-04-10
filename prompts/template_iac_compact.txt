@@ -169,6 +169,12 @@ Chạy trong `/work`, loại trừ glob khớp `exclude_paths` và §3.1:
 ### 7.4) Confidence
 `High` | `Medium` | `Low` — khớp Pass D; sampling làm giảm confidence thì phải nói rõ.
 
+### 7.5) Semi-quant scoring (khuyến nghị chuẩn hóa)
+- Chấm 3 thành phần theo thang `1..5`: `Impact`, `Exploitability`, `Exposure`.
+- Điểm tổng: `Risk score = round((Impact*0.4 + Exploitability*0.3 + Exposure*0.3) * 2, 1)` (thang 2.0..10.0).
+- Map severity mặc định: `>=9.0 Critical`, `>=7.5 High`, `>=5.5 Medium`, `>=3.5 Low`, `<3.5 Info`.
+- Có thể override theo `environment_scope`/deployability, nhưng **phải** ghi lý do override trong finding.
+
 ---
 ## 8) OUTPUT CONTRACT — BÁO CÁO CUỐI (BẮT BUỘC, ĐÚNG THỨ TỰ)
 **Deliverable:** Chỉ các mục dưới đây. **Ngôn ngữ bắt buộc: tiếng Việt**; thuật ngữ chuyên môn được giữ tiếng Anh (ví dụ: `Severity`, `Evidence`, `Remediation`, `Pipeline`, `Misconfiguration`).  
@@ -178,6 +184,8 @@ Chạy trong `/work`, loại trừ glob khớp `exclude_paths` và §3.1:
 - Không xuất báo cáo nếu thiếu một trong các section bắt buộc từ mục 1) đến 10).
 - Không xuất báo cáo nếu `Finding Statistics` không khớp tổng số `F-xxx`.
 - Không xuất báo cáo nếu có `Critical/High` nhưng thiếu `Evidence refs` hoặc thiếu `Retest criteria`.
+- Không xuất báo cáo nếu `Critical/High` thiếu khuyến nghị fix **có thể hành động** (`Immediate fix`, `Long-term hardening`, `Validation/Re-test`).
+- Không được ghi `Covered` trong `Coverage Matrix` nếu thiếu tham chiếu `EVID-xx` hoặc `F-xxx`.
 - Không dùng câu mơ hồ kiểu “đã xác minh toàn bộ” khi chưa đạt policy ở §4 Pass D.
 
 1) `# Executive Summary`  
@@ -188,6 +196,7 @@ Chạy trong `/work`, loại trừ glob khớp `exclude_paths` và §3.1:
 
 2) `## Engagement Metadata`  
    Repo/flow name, `branch_or_commit`, `execution_profile`, `roe_level`, `environment_scope`, `iac_types`, `exclude_paths`, phiên bản tool chính, sampling (nếu có), blocker scanner, timezone/date nếu biết.
+   - **Evidence freshness (bắt buộc):** commit hash/tag được scan + timestamp bắt đầu/kết thúc scan.
 
 3) `## Finding Statistics` (**bắt buộc**)  
    - Bảng **Unique findings** (sau dedupe):
@@ -221,7 +230,7 @@ Chạy trong `/work`, loại trừ glob khớp `exclude_paths` và §3.1:
 10) `## Retest Scope`  
     Checklist đóng **từng F-xxx** (secret rotated, MR chứng minh rule pass, scan CI green).
 
-**Không được dùng `N/A` trong bất kỳ section nào.** Nếu thiếu dữ liệu, phải ghi rõ:
+**Không được dùng `N/A` trong bất kỳ section nào.** Nếu thiếu dữ liệu, dùng `Unknown (insufficient evidence)` và ghi rõ:
 - `Blocker: <mô tả cụ thể>`  
 - `Impact to assessment: <ảnh hưởng phạm vi/độ tin cậy>`  
 - `Required action: <hành động cần từ operator/team>`  
@@ -259,6 +268,7 @@ Chạy trong `/work`, loại trừ glob khớp `exclude_paths` và §3.1:
 - Confidence: High|Medium|Low
 - Environment applicability: dev|staging|prod|mixed (và lý do)
 - Risk scoring basis: Impact × Exploitability × Exposure (1 câu)
+- Risk score (nếu có): <2.0..10.0> và cách map severity
 - Control mapping: CWE/CIS/NIST/OWASP mapping (nếu chưa map được, phải ghi `Pending mapping` + lý do)
 - Affected: path + resource/task/chart/workflow job name
 - Scanner correlation: <TOOL:rule_id> + Scanner raw severity → Normalized (hoặc manual only)
@@ -269,7 +279,11 @@ Chạy trong `/work`, loại trừ glob khớp `exclude_paths` và §3.1:
 - Evidence refs: EVID-01, …
 - Evidence (redacted):
 - Impact (Business + CIA):
-- Remediation (ngắn + P1/P2):
+- Risk if not fixed (1-2 câu):
+- Immediate fix (ngắn hạn, có thể làm ngay, P1/P2):
+- Long-term hardening (guardrail/policy/standardization):
+- Owner suggestion: DevOps|SecOps|Platform|App team (và lý do ngắn)
+- Validation / Retest command or criteria:
 - SLA gợi ý: Critical 7d | High 14d | Medium 30d | Low 90d
 - Likelihood / FP checks:
 - Retest criteria: [ ] …
@@ -294,6 +308,7 @@ Chạy trong `/work`, loại trừ glob khớp `exclude_paths` và §3.1:
 - Low: tuân Pass C / Pass E; không mất trace (mỗi hàng trong thống kê Low map tới F-ID).
 - Info: tuân quy tắc §8 mục 6 (bảng + top chi tiết nếu >20).
 - `Coverage Matrix` là bảng markdown với domain tối thiểu §8.
+- Không có dòng `Covered` nào trong `Coverage Matrix` mà thiếu `EVID-xx` hoặc `F-xxx`.
 - Có **Remediation 30/60/90** + **Retest Scope** + **limitations** trong Executive Summary.
 - Không đếm fixture/test tool vào Critical nếu đã Out of scope.
 - Báo cáo viết bằng **tiếng Việt rõ ràng, mạch lạc**, chỉ giữ English cho thuật ngữ chuyên môn cần thiết.
@@ -304,6 +319,6 @@ Chạy trong `/work`, loại trừ glob khớp `exclude_paths` và §3.1:
 ## 12) RUNTIME RESILIENCE (ANTI-FAIL)
 - Backoff 2s → 5s → 10s khi `503` / timeout; không spam caller đã fail.
 - Degrade: inventory + `Untested` + partial report §8 thay vì fail flow.
-- Không FAIL vì thiếu file do user chưa paste — tự tạo trong sandbox hoặc tóm tắt.
+- Không FAIL vì thiếu file do user chưa paste — **không tự tạo artifact để scan**; ghi `Blocker` + `Required action` + `Interim status: Untested`.
 - Một lần `ask` operator nếu `/work` trống (nếu được phép).
 - Báo cáo: **heading §8 cố định**; section thêm chỉ **Appendix** như §8 cho phép.

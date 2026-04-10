@@ -40,16 +40,17 @@ const (
 )
 
 type dockerClient struct {
-	db       database.Querier
-	logger   *logrus.Logger
-	dataDir  string
-	hostDir  string
-	client   *client.Client
-	inside   bool
-	defImage string
-	socket   string
-	network  string
-	publicIP string
+	db                   database.Querier
+	logger               *logrus.Logger
+	dataDir              string
+	hostDir              string
+	client               *client.Client
+	inside               bool
+	defImage             string
+	socket               string
+	network              string
+	publicIP             string
+	flowWorkspaceSeedDir string
 }
 
 type DockerClient interface {
@@ -125,6 +126,10 @@ func NewDockerClient(ctx context.Context, db database.Querier, cfg *config.Confi
 	}
 
 	logger := logrus.StandardLogger()
+	seedDir := strings.TrimSpace(cfg.FlowWorkspaceSeedDir)
+	if seedDir != "" {
+		logger.WithField("flow_workspace_seed_dir", seedDir).Info("flow workspace auto-seed enabled (copies into empty /work when terminal starts)")
+	}
 	logger.WithFields(logrus.Fields{
 		"docker_name":    info.Name,
 		"docker_arch":    info.Architecture,
@@ -138,16 +143,17 @@ func NewDockerClient(ctx context.Context, db database.Querier, cfg *config.Confi
 	}).Debug("Docker client initialized")
 
 	return &dockerClient{
-		db:       db,
-		client:   cli,
-		dataDir:  dataDir,
-		hostDir:  hostDir,
-		logger:   logger,
-		inside:   inside,
-		defImage: defImage,
-		socket:   socket,
-		network:  netName,
-		publicIP: publicIP,
+		db:                   db,
+		client:               cli,
+		dataDir:              dataDir,
+		hostDir:              hostDir,
+		logger:               logger,
+		inside:               inside,
+		defImage:             defImage,
+		socket:               socket,
+		network:              netName,
+		publicIP:             publicIP,
+		flowWorkspaceSeedDir: seedDir,
 	}, nil
 }
 
@@ -168,9 +174,12 @@ func (dc *dockerClient) RunContainer(
 		return database.Container{}, fmt.Errorf("failed to create tmp directory: %w", err)
 	}
 
+	useNamedVolume := false
+	var bindHostPath string
 	hostDir := dc.hostDir
 	if hostDir != "" {
 		hostDir = filepath.Join(hostDir, fmt.Sprintf(containerLocalCwdTemplate, flowID))
+		bindHostPath = hostDir
 	}
 
 	logger := dc.logger.WithContext(ctx).WithFields(logrus.Fields{
@@ -235,6 +244,13 @@ func (dc *dockerClient) RunContainer(
 		}
 	}
 
+	if !useNamedVolume && bindHostPath != "" && dc.flowWorkspaceSeedDir != "" {
+		if err := dc.maybeSeedFlowWorkspaceBind(logger, bindHostPath); err != nil {
+			defer updateContainerInfo(database.ContainerStatusFailed, "")
+			return database.Container{}, err
+		}
+	}
+
 	logger.Info("creating container")
 
 	config.Hostname = fmt.Sprintf("%08x", crc32.ChecksumIEEE([]byte(containerName)))
@@ -252,6 +268,7 @@ func (dc *dockerClient) RunContainer(
 	}
 
 	if hostDir == "" {
+		useNamedVolume = true
 		volumeName, err := dc.client.VolumeCreate(ctx, volume.CreateOptions{
 			Name:   fmt.Sprintf("%s-data", containerName),
 			Driver: "local",
@@ -361,6 +378,13 @@ func (dc *dockerClient) RunContainer(
 
 	logger.Info("container started")
 	updateContainerInfo(database.ContainerStatusRunning, containerID)
+
+	if useNamedVolume && dc.flowWorkspaceSeedDir != "" {
+		if err := dc.maybeSeedFlowWorkspaceVolume(ctx, logger, containerID); err != nil {
+			defer updateContainerInfo(database.ContainerStatusFailed, containerID)
+			return database.Container{}, err
+		}
+	}
 
 	return dbContainer, nil
 }

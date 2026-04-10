@@ -23,9 +23,9 @@ Mục tiêu (trong scope được uỷ quyền):
 
 ---
 ## 2. TARGET & CREDENTIALS (BẮT BUỘC ĐIỀN KHI CHẠY)
-- Base URL (in-scope): `https://REPLACE_ME.example.com`
-- Username: `REPLACE_ME_USERNAME`
-- Password: `REPLACE_ME_PASSWORD`
+- Base URL (in-scope): 
+- Username: 
+- Password: 
 
 ### RoE tối thiểu (điền)
 - Môi trường: `[staging | UAT | production-like]`
@@ -43,9 +43,9 @@ Mục tiêu (trong scope được uỷ quyền):
 3.2 Block bắt buộc (ưu tiên #1)
 ```text
 === BROWSER_SESSION ===
-access_token: "REPLACE_ME_ACCESS_TOKEN_JWT"
-refresh_token: "REPLACE_ME_REFRESH_TOKEN"
-expires_at: REPLACE_ME_UNIX_OR_EMPTY
+access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc3NTcxNTU5NX1dLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwiYXVkIjoiYXV0aGVudGljYXRlZCIsImVtYWlsIjoibGR0d0BzeXN0ZW0uY29tIiwiZXhwIjoxNzc1NzE5MTk1LCJpYXQiOjE3NzU3MTU1OTUsImlzX2Fub255bW91cyI6ZmFsc2UsInBob25lIjoiIiwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJzZXNzaW9uX2lkIjoiOTJkYWYxMTMtNTgzZC00YzU2LWEwZjQtYTBiN2MxYjRjZGRkIiwic3ViIjoiZDVkNWQ1ZDUtZDVkNS00ZDVkLThkNWQtZDVkNWQ1ZDVkNWQyIiwidXNlcl9tZXRhZGF0YSI6eyJkYXlzX2xlZnQiOjc3LCJwYXNzd29yZF9zdGF0dXMiOiJvayJ9fQ.YNYVcGhGUnlASR8D9JikwOrQ0QTNBNArGPrvbwYe5H8
+refresh_token: l4mm5srijzex
+expires_at: 1775719195
 token_type: bearer
 === END BROWSER_SESSION ===
 ```

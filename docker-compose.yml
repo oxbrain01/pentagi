@@ -23,7 +23,11 @@ networks:
 
 services:
   pentagi:
-    image: ${PENTAGI_IMAGE:-vxcontrol/pentagi:latest}
+    # Build from this repo so features like FLOW_WORKSPACE_SEED_DIR are included. Upstream image has no seed.
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${PENTAGI_IMAGE:-pentagi:local}
     restart: unless-stopped
     container_name: pentagi
     hostname: pentagi
@@ -165,12 +169,16 @@ services:
       - DOCKER_WORK_DIR=${DOCKER_WORK_DIR:-}
       - DOCKER_DEFAULT_IMAGE=${DOCKER_DEFAULT_IMAGE:-}
       - DOCKER_DEFAULT_IMAGE_FOR_PENTEST=${DOCKER_DEFAULT_IMAGE_FOR_PENTEST:-}
+      # Leave empty for DAST/no-source mode. Set to /flow-workspace-seed to enable local source auto-seed.
+      - FLOW_WORKSPACE_SEED_DIR=${FLOW_WORKSPACE_SEED_DIR:-}
     logging:
       options:
         max-size: 50m
         max-file: "7"
     volumes:
       - ${PENTAGI_DATA_DIR:-pentagi-data}:/opt/pentagi/data
+      # Host source path -> /flow-workspace-seed (read-only). Must be set explicitly when enabling FLOW_WORKSPACE_SEED_DIR.
+      - ${PENTAGI_FLOW_WORKSPACE_SEED_HOST:-./work/.seed-empty}:/flow-workspace-seed:ro
       - ${PENTAGI_SSL_DIR:-pentagi-ssl}:/opt/pentagi/ssl
       - ${PENTAGI_OLLAMA_DIR:-pentagi-ollama}:/root/.ollama
       - ${PENTAGI_DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock

@@ -1,7 +1,18 @@
-import { Document, Page, pdf, StyleSheet, Text, View } from '@react-pdf/renderer';
+import { Document, Font, Page, pdf, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { marked } from 'marked';
 
 import { Log } from './log';
+
+// Register a Unicode-capable font family to render Vietnamese correctly in PDF.
+Font.register({
+    family: 'NotoSans',
+    fonts: [
+        { src: '/fonts/NotoSans-Regular.ttf' },
+        { fontStyle: 'italic', src: '/fonts/NotoSans-Italic.ttf' },
+        { fontWeight: 'bold', src: '/fonts/NotoSans-Bold.ttf' },
+        { fontStyle: 'italic', fontWeight: 'bold', src: '/fonts/NotoSans-BoldItalic.ttf' },
+    ],
+});
 
 // PDF styles for @react-pdf/renderer - Enhanced beautiful styles
 const pdfStyles = StyleSheet.create({
@@ -83,7 +94,7 @@ const pdfStyles = StyleSheet.create({
     },
     link: {
         color: '#2563eb',
-        fontWeight: 'semibold',
+        fontWeight: 'bold',
         textDecoration: 'underline',
     },
     list: {
@@ -112,7 +123,7 @@ const pdfStyles = StyleSheet.create({
     page: {
         backgroundColor: '#ffffff',
         color: '#334155',
-        fontFamily: 'Helvetica',
+        fontFamily: 'NotoSans',
         fontSize: 10,
         lineHeight: 1.5,
         padding: 40,
@@ -189,7 +200,7 @@ const parseInlineTokens = (text: string): InlineToken[] => {
                 return typeof t === 'object' && t !== null;
             }) || [];
 
-        paragraphTokens.forEach((token) => {
+        paragraphTokens.forEach((token: Record<string, unknown>) => {
             switch (token.type) {
                 case 'codespan': {
                     tokens.push({
@@ -259,7 +270,7 @@ const parseInlineTokens = (text: string): InlineToken[] => {
 
 // Parse markdown using marked library and convert tokens
 const parseMarkdownTokens = (markdown: string): ParsedContent[] => {
-    const tokens = marked.lexer(markdown);
+    const tokens = marked.lexer(markdown) as Record<string, unknown>[];
     const result: ParsedContent[] = [];
 
     const processToken = (token: Record<string, unknown>): void => {

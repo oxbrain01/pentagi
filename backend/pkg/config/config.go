@@ -20,7 +20,12 @@ type Config struct {
 	DatabaseURL string `env:"DATABASE_URL" envDefault:"postgres://pentagiuser:pentagipass@pgvector:5432/pentagidb?sslmode=disable"`
 	Debug       bool   `env:"DEBUG" envDefault:"false"`
 	DataDir     string `env:"DATA_DIR" envDefault:"./data"`
-	AskUser     bool   `env:"ASK_USER" envDefault:"false"`
+	// FlowWorkspaceSeedDir copies this host-visible directory into each flow's /work when the
+	// workspace is still empty (bind mount path before container start, or Docker volume right after).
+	// When PentAGI runs in Docker, mount the repo into the pentagi container and set this to the
+	// in-container path (e.g. /flow-workspace-seed). See .env.example.
+	FlowWorkspaceSeedDir string `env:"FLOW_WORKSPACE_SEED_DIR"`
+	AskUser              bool   `env:"ASK_USER" envDefault:"false"`
 
 	// === PentAGI Cloud Service Integration ===
 	InstallationID string `env:"INSTALLATION_ID"`

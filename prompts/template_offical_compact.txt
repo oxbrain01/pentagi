@@ -1,16 +1,27 @@
 # PentAGI — Official Web App Security Assessment (Grey-Box, Authenticated) — Compact
 #
-# Mục tiêu: giữ safety + output contract ổn định, rút gọn checklist vẫn bao quát P0.
+# Mục tiêu: giữ safety + output contract ổn định; tận dụng agent/tool PentAGI; rút thời gian bằng time-box + dedupe + một lần OSINT stack.
 #
 <!-- Liên kết tham chiếu (không bắt buộc): OWASP WSTG https://owasp.org/www-project-web-security-testing-guide/ -->
 
 ---
 ## 0. EXECUTION PROFILE (CHỌN 1)
-- `FAST` (ưu tiên tốc độ): surface nhanh + chỉ đào sâu top P0/P1 có tín hiệu rõ.
-- `BALANCED` (mặc định): coverage rộng + đào sâu P0 đầy đủ, P1 theo thời gian.
-- `MAX` (ưu tiên bao phủ tối đa): mở rộng nhiều biến thể hơn, chấp nhận chậm/tốn token hơn.
+- `FAST` (ưu tiên tốc độ): fingerprint + inventory tối thiểu; **tối đa 5 flow P0** (nếu nhiều hơn → gộp nhóm + chọn đại diện, ghi phần còn lại `Chưa test` có lý do); Pass B chỉ trên P0 có tín hiệu; **bỏ qua 3.F** (headers/CSP) trừ khi có tín hiệu WAF/CSP liên quan PoC; **một** lượt OSINT stack (searcher) sau fingerprint; DAST/autoscan chỉ khi `dast_allowed: yes` và RoE cho phép — **một** lệnh/profile, không lặp scanner.
+- `BALANCED` (mặc định): coverage rộng + đào sâu P0 đầy đủ; P1 theo thời gian; 3.F theo tín hiệu hoặc mẫu nhanh (chỉ base URL + 1-2 route nhạy cảm).
+- `MAX` (ưu tiên bao phủ tối đa): mở rộng biến thể, nhiều flow P1, chấp nhận chậm/tốn token hơn.
 
 Nếu không chỉ định, dùng `BALANCED`.
+
+### 0.1 Khối INPUT (khuyến nghị paste vào đầu task)
+```text
+=== WEB_ASSESSMENT_INPUT ===
+execution_profile: BALANCED
+base_url: http://vulnapi.testinvicti.com
+dast_allowed: yes
+notes: 
+=== END WEB_ASSESSMENT_INPUT ===
+```
+- `dast_allowed: yes` → được phép chạy công cụ DAST/passive scan trong container (vd nuclei, ffuf, httpx, katana…) **trong RoE**; luôn kèm scope URL, rate limit, và **một** policy cố định; không chạy lại toàn bộ khi đã có kết quả tương đương.
 
 ---
 ## 1. ROLE & OBJECTIVE
@@ -20,6 +31,29 @@ Mục tiêu (trong scope được uỷ quyền):
 - Thu thập bề mặt tấn công: UI + API (REST/JSON, GraphQL, WebSocket/SSE nếu có)
 - Rà soát sâu các flow rủi ro cao (P0) và xác minh mọi finding bằng tool
 - Báo cáo rõ executive + kỹ thuật theo output contract bên dưới (Section 5/6)
+
+### 1.1 PentAGI — tận dụng nền tảng (gọn, theo thứ tự)
+Thực thi **theo pipeline** để giảm vòng lặp và token:
+
+1. **Bộ nhớ / ngữ cảnh (nếu bật trong flow):**
+   - `graphiti_search` (hoặc tương đương): **một** truy vấn `recent_context` trước recon lớn — tránh lặp lệnh đã chạy.
+   - `search_guide` / `memorist`: chỉ khi cần methodology cho class bug (AuthZ, GraphQL, JWT…) — không gọi rải rác từng endpoint.
+   - `store_guide`: chỉ khi vừa tìm ra **pattern tái sử dụng** (đã anonymize theo system prompt).
+
+2. **Thu thập & chạy lệnh:**
+   - Ưu tiên **`terminal`**: script một lần (curl/httpie + jq), gom nhiều check; redirect/`head` khi chỉ cần status/header.
+   - **`browser`**: chỉ khi cần HTML có link/ form hoặc hint JS mà curl không đủ — không dùng browser thay cho mọi API đã biết endpoint.
+
+3. **Chuyên gia (delegate có ngưỡng):**
+   - **`search` (searcher)**: **sau fingerprint**, **một** lượt cho stack (framework, lib auth, CVE nổi bật của version quan sát được) — không OSINT lại từng nhánh nhỏ.
+   - **`coder`**: khi cần lặp >5 request có cấu trúc giống nhau (fuzz IDOR, race nhẹ trong RoE) — không mở coder cho từng curl đơn.
+   - **`advice` (adviser)**: khi bị kẹt chiến lược hoặc WAF/block sau 2 hướng đã thử.
+   - **`maintenance` (installer)**: chỉ khi thiếu tool trong image và RoE cho phép cấu hình (thường tránh — image Kali đã có sẵn nhiều tool).
+
+4. **Exploit intel (nếu có tool):**
+   - `sploitus` / DB tương đương: sau khi có **CPE/version/service** cụ thể, không dùng cho mọi endpoint 404.
+
+5. **Subtask / fan-out:** không tách song song nhiều subtask cùng mục tiêu; ưu tiên **một** nhánh sâu đến đủ bằng chứng rồi mới nhánh kế.
 
 ---
 ## 2. TARGET & CREDENTIALS (BẮT BUỘC ĐIỀN KHI CHẠY)
@@ -40,12 +74,12 @@ Mục tiêu (trong scope được uỷ quyền):
 - Ưu tiên số 1: dùng `BROWSER_SESSION` (copy từ localStorage sau khi login tay).
 - Nếu `BROWSER_SESSION` không dùng được: fallback API login chỉ khi RoE cho phép và có thông tin cần thiết.
 
-3.2 Block bắt buộc (ưu tiên #1)
+3.2 Block bắt buộc (ưu tiên #1) — **chỉ paste giá trị thật từ môi trường được phép; không commit file này chứa secret**
 ```text
 === BROWSER_SESSION ===
-access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc3NTcxNTU5NX1dLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwiYXVkIjoiYXV0aGVudGljYXRlZCIsImVtYWlsIjoibGR0d0BzeXN0ZW0uY29tIiwiZXhwIjoxNzc1NzE5MTk1LCJpYXQiOjE3NzU3MTU1OTUsImlzX2Fub255bW91cyI6ZmFsc2UsInBob25lIjoiIiwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJzZXNzaW9uX2lkIjoiOTJkYWYxMTMtNTgzZC00YzU2LWEwZjQtYTBiN2MxYjRjZGRkIiwic3ViIjoiZDVkNWQ1ZDUtZDVkNS00ZDVkLThkNWQtZDVkNWQ1ZDVkNWQyIiwidXNlcl9tZXRhZGF0YSI6eyJkYXlzX2xlZnQiOjc3LCJwYXNzd29yZF9zdGF0dXMiOiJvayJ9fQ.YNYVcGhGUnlASR8D9JikwOrQ0QTNBNArGPrvbwYe5H8
-refresh_token: l4mm5srijzex
-expires_at: 1775719195
+access_token: <PASTE_ACCESS_TOKEN_OR_EMPTY>
+refresh_token: <PASTE_REFRESH_TOKEN_OR_EMPTY>
+expires_at: <UNIX_TIMESTAMP_OR_EMPTY>
 token_type: bearer
 === END BROWSER_SESSION ===
 ```
@@ -79,13 +113,13 @@ Trước Phase 1-3, bắt buộc tạo bảng fingerprint ngắn:
 | Backend/API style | REST/GraphQL/WebSocket/SSE/gRPC-web + base path quan sát được |
 | Auth stack | cookie/JWT/OAuth/OIDC/Supabase/IdP liên quan |
 | Hạ tầng | banner/version/WAF/CDN/reverse proxy (nếu thấy) |
-| P0 flows | 3-10 flow ưu tiên nhất (auth, tenant, admin, billing, export, upload, webhook, workflow...) |
+| P0 flows | 3-10 flow ưu tiên nhất (auth, tenant, admin, billing, export, upload, webhook, workflow...) — trong `FAST` tối đa 5 |
 Nếu chưa đủ tối thiểu => không chuyển checklist sâu Phase 3.
 
 ---
 ## 4.1 “Đủ bằng chứng” (cho trạng thái kết luận)
 - `PoC xác minh`: có request/response hoặc log tool tái lập được + điều kiện tiên quyết rõ + impact quan sát/suy luận có căn cứ.
-- `Đã thử âm tính`: ít nhất 2-3 biến thể có ý nghĩa (payload/role/shape input/verb).
+- `Đã thử âm tính`: ít nhất 2-3 biến thể có ý nghĩa (payload/role/shape input/verb); trong `FAST` có thể 2 biến thể nếu đã có tín hiệu yếu.
 - `Không áp dụng`: nêu điều kiện loại trừ quan sát được.
 - `Chưa test`: blocker + dữ liệu/quyền/môi trường cần thêm.
 
@@ -95,6 +129,7 @@ Pass A — Broad mapping (nhanh, bắt buộc)
 - Hoàn thành fingerprint + inventory endpoint/flow + gắn nhãn P0/P1/P2
 - Mỗi flow làm smoke test auth/authz/input cơ bản để tìm tín hiệu
 - Không đốt thời gian vào payload nặng khi chưa có tín hiệu
+- **Tốc độ:** gom discovery (httpx/katana/gau hoặc tương đương **một pipeline** trong RoE) thay vì nhiều lệnh crawl trùng; ghi URL đã crawl để không lặp.
 
 Pass B — Deep dive theo ưu tiên rủi ro
 - Chỉ đào sâu theo thứ tự điểm ưu tiên: `Priority Score = Impact x Exploitability x Exposure`
@@ -107,7 +142,7 @@ Phase 1 — Auth/Session deep mapping
 
 Phase 2 — Attack surface inventory
 - Passive: crawl links/forms/hidden fields, JS bundle hints (fetch/axios/XHR/WS URL/GraphQL endpoint), metadata (/openapi, /.well-known, sitemap, swagger, source map nếu thấy)
-- Active (có kiểm soát): tier wordlist theo dấu hiệu stack + v1/v2 + internal/debug/actuator (nếu RoE cho phép)
+- Active (có kiểm soát): tier wordlist theo dấu hiệu stack + v1/v2 + internal/debug/actuator (nếu RoE cho phép); trong `FAST` giới hạn độ sâu wordlist và số path.
 
 Phase 3 — Vulnerability checklist (theo nhóm)
 3.A AuthZ (BOLA/IDOR/BFLA/role escalation) — ưu tiên P0
@@ -125,6 +160,8 @@ Ghi trạng thái theo taxonomy Section 4.1.
 - Không lặp lại cùng một finding ở nhiều endpoint tương đương: dùng representative endpoint + ghi phạm vi ảnh hưởng.
 - Không ủy quyền subtask trùng nhau; chống fan-out quá mức.
 - Khi không có tín hiệu mới sau 2 vòng retry: kết thúc nhánh và chuyển nhánh khác.
+- **Trước mỗi recon/exploit lớn:** 1 kiểm tra bộ nhớ (graphiti/guide) nếu khả dụng — tổng cộng không quá **3** query bộ nhớ toàn engagement trừ khi `MAX`.
+- **DAST:** nếu `dast_allowed: yes`, chọn **một** công cụ chính + template phù hợp stack; không chạy song song 2 scanner cùng URL pool khi chưa có lý do.
 
 ---
 ## 5. REPORT OUTPUT CONTRACT (BẮT BUỘC)
@@ -184,8 +221,7 @@ Mỗi finding phải có đủ:
 ---
 ## 8. DONE CRITERIA (ĐỂ KẾT THÚC NHANH MÀ KHÔNG SÓT)
 Được phép kết thúc khi thỏa đồng thời:
-- Tất cả flow P0 đã qua Pass A và Pass B (hoặc có blocker rõ trong residual risk)
-- Coverage Matrix có trạng thái cho toàn bộ nhóm 3.A-3.F
+- Tất cả flow P0 (trong giới hạn profile §0) đã qua Pass A và Pass B (hoặc có blocker rõ trong residual risk)
+- Coverage Matrix có trạng thái cho toàn bộ nhóm 3.A-3.F **hoặc** ghi rõ `N/A`/`Skipped (FAST)` theo §0
 - Mỗi finding đều có evidence redacted + retest criteria
 - Không còn nhánh có tín hiệu mạnh chưa kiểm thử
-

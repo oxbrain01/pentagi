@@ -29,11 +29,11 @@ Bạn là **IaC Security Assessor** (audit **cấu hình & artifact trong repo**
 ```text
 === IAC_INPUT ===
 execution_profile: BALANCED
-repo_path: 
-sub_path: 
+repo_path: /Users/vinhtv/Documents/g-group/g-force-deploy-audit
+sub_path: /Users/vinhtv/Documents/g-group/g-force-deploy-audit/infras/ansible
 allowed_paths: .
 exclude_paths: .git,node_modules,.terraform,vendor,dist,build,tmp,.cache
-branch_or_commit: main
+branch_or_commit: develop
 iac_types: 
 environment_scope: 
 roe_level: audit-only

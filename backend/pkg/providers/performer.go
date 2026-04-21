@@ -183,7 +183,7 @@ func (fp *flowProvider) performAgentChain(
 		}
 		chain = append(chain, msg)
 
-		if err := fp.updateMsgChain(ctx, chainID, chain, rollLastUpdateTime()); err != nil {
+		if err := fp.updateMsgChain(ctx, optAgentType, chainID, chain, rollLastUpdateTime()); err != nil {
 			logger.WithError(err).Error("failed to update msg chain")
 			return err
 		}
@@ -222,7 +222,7 @@ func (fp *flowProvider) performAgentChain(
 					},
 				},
 			})
-			if err := fp.updateMsgChain(ctx, chainID, chain, rollLastUpdateTime()); err != nil {
+			if err := fp.updateMsgChain(ctx, optAgentType, chainID, chain, rollLastUpdateTime()); err != nil {
 				logger.WithError(err).Error("failed to update msg chain")
 				return err
 			}
@@ -254,7 +254,7 @@ func (fp *flowProvider) performAgentChain(
 					}),
 				)
 				logger.WithError(err).Warn("failed to summarize chain")
-			} else if err := fp.updateMsgChain(ctx, chainID, chain, rollLastUpdateTime()); err != nil {
+			} else if err := fp.updateMsgChain(ctx, optAgentType, chainID, chain, rollLastUpdateTime()); err != nil {
 				logger.WithError(err).Error("failed to update msg chain")
 				return err
 			}
@@ -907,7 +907,7 @@ func (fp *flowProvider) processAssistantResult(
 	}
 	chain = append(chain, msg)
 	durationDelta += time.Since(processAssistantResultStartTime).Seconds()
-	if err := fp.updateMsgChain(ctx, chainID, chain, durationDelta); err != nil {
+	if err := fp.updateMsgChain(ctx, pconfig.OptionsTypeAssistant, chainID, chain, durationDelta); err != nil {
 		return fmt.Errorf("failed to update msg chain: %w", err)
 	}
 
@@ -916,6 +916,7 @@ func (fp *flowProvider) processAssistantResult(
 
 func (fp *flowProvider) updateMsgChain(
 	ctx context.Context,
+	optAgentType pconfig.ProviderOptionsType,
 	chainID int64,
 	chain []llms.MessageContent,
 	durationDelta float64,
@@ -928,6 +929,8 @@ func (fp *flowProvider) updateMsgChain(
 	_, err = fp.db.UpdateMsgChain(ctx, database.UpdateMsgChainParams{
 		Chain:           chainBlob,
 		DurationSeconds: durationDelta,
+		Model:           fp.Model(optAgentType),
+		ModelProvider:   string(fp.Type()),
 		ID:              chainID,
 	})
 	if err != nil {

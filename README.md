@@ -3363,3 +3363,7 @@ For questions contact: **info@pentagi.com** or **info@vxcontrol.com**
 
 OPEN_AI_KEY=dev-local-very-secret-key
 OPEN_AI_SERVER_URL=http://host.docker.internal:8317/v1
+
+
+docker compose down
+docker compose up -d --build

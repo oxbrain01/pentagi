@@ -37,6 +37,10 @@ const (
 	delayBetweenRetries            = 5 * time.Second
 )
 
+var nonRetriableChainErrors = []string{
+	"MALFORMED_FUNCTION_CALL",
+}
+
 type callResult struct {
 	streamID  int64
 	funcCalls []llms.ToolCall
@@ -298,6 +302,7 @@ func (fp *flowProvider) execToolCall(
 		"tool_call_id": toolCall.ID,
 		"msg_chain_id": chainID,
 	}))
+	toolTypeMapping := tools.GetToolTypeMapping()
 
 	if detector.detect(toolCall) {
 		if len(detector.funcCalls) >= RepeatingToolCallThreshold+maxSoftDetectionsBeforeAbort {
@@ -344,6 +349,11 @@ func (fp *flowProvider) execToolCall(
 				return "", err
 			}
 
+			if toolTypeMapping[funcName] == tools.AgentToolType && isNonRetriableToolExecutionError(err) {
+				logger.WithError(err).Warn("agent tool returned non-retriable error, continuing chain with soft-fail response")
+				return fmt.Sprintf("agent tool '%s' failed with a non-retriable provider error: %s", funcName, err.Error()), nil
+			}
+
 			logger.WithError(err).Warn("failed to exec function")
 
 			funcExecErr := err
@@ -381,6 +391,21 @@ func (fp *flowProvider) execToolCall(
 	}
 
 	return response, nil
+}
+
+func isNonRetriableToolExecutionError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	errStr := err.Error()
+	for _, marker := range nonRetriableChainErrors {
+		if strings.Contains(errStr, marker) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (fp *flowProvider) callWithRetries(
@@ -458,6 +483,10 @@ func (fp *flowProvider) callWithRetries(
 
 	for idx := 0; idx <= maxRetriesToCallAgentChain; idx++ {
 		if idx == maxRetriesToCallAgentChain {
+			if allNonRetriableChainErrors(errs) {
+				return nil, fmt.Errorf("non-retriable agent chain failure: %w", errors.Join(errs...))
+			}
+
 			reflectorResult, err := fp.performCallerReflector(
 				ctx, optAgentType, chainID, taskID, subtaskID, chain, executor, executionContext, errs,
 			)
@@ -516,6 +545,15 @@ func (fp *flowProvider) callWithRetries(
 				"retry_iteration": idx,
 				"error":           err.Error()[:min(200, len(err.Error()))],
 			}).Warn("agent chain call failed, will retry")
+
+			// Some provider stop-reasons are deterministic and usually do not recover on immediate retry.
+			// Fast-forward to caller reflector to avoid burning retries and delay budget.
+			if isNonRetriableChainError(err) {
+				logger.WithField("error", err.Error()[:min(200, len(err.Error()))]).
+					Warn("non-retriable agent chain error detected, skipping remaining retries")
+				idx = maxRetriesToCallAgentChain - 1
+				continue
+			}
 		}
 
 		ticker.Reset(delayBetweenRetries)
@@ -542,6 +580,35 @@ func (fp *flowProvider) callWithRetries(
 	}
 
 	return &result, nil
+}
+
+func isNonRetriableChainError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	errStr := err.Error()
+	for _, marker := range nonRetriableChainErrors {
+		if strings.Contains(errStr, marker) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func allNonRetriableChainErrors(errs []error) bool {
+	if len(errs) == 0 {
+		return false
+	}
+
+	for _, err := range errs {
+		if !isNonRetriableChainError(err) {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (fp *flowProvider) performReflector(

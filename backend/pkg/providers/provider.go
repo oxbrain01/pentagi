@@ -424,22 +424,23 @@ func (fp *flowProvider) RefineSubtasks(ctx context.Context, taskID int64) ([]too
 		summarizerHandler := fp.GetSummarizeResultHandler(&taskID, nil)
 		executionState, err := fp.getTaskPrimaryAgentChainSummary(ctx, taskID, summarizerHandler)
 		if err != nil {
-			return nil, wrapErrorEndEvaluatorSpan(ctx, refinerEvaluator, "failed to prepare execution state", err)
-		}
-
-		refinerContext["user"]["ExecutionState"] = executionState
-		refinerTmpl, err = fp.prompter.RenderTemplate(templates.PromptTypeSubtasksRefiner, refinerContext["user"])
-		if err != nil {
-			return nil, wrapErrorEndEvaluatorSpan(ctx, refinerEvaluator, "failed to get task subtasks refiner template (2)", err)
+			logrus.WithContext(ctx).WithError(err).Warn("failed to prepare execution state, continuing without execution state")
+		} else {
+			refinerContext["user"]["ExecutionState"] = executionState
+			refinerTmpl, err = fp.prompter.RenderTemplate(templates.PromptTypeSubtasksRefiner, refinerContext["user"])
+			if err != nil {
+				return nil, wrapErrorEndEvaluatorSpan(ctx, refinerEvaluator, "failed to get task subtasks refiner template (2)", err)
+			}
 		}
 
 		if len(refinerTmpl) < msgRefinerSizeLimit {
 			msgLogsSummary, err := fp.getTaskMsgLogsSummary(ctx, taskID, summarizerHandler)
 			if err != nil {
-				return nil, wrapErrorEndEvaluatorSpan(ctx, refinerEvaluator, "failed to get task msg logs summary", err)
+				logrus.WithContext(ctx).WithError(err).Warn("failed to get task msg logs summary, continuing without execution logs")
+			} else {
+				refinerContext["user"]["ExecutionLogs"] = msgLogsSummary
 			}
 
-			refinerContext["user"]["ExecutionLogs"] = msgLogsSummary
 			refinerTmpl, err = fp.prompter.RenderTemplate(templates.PromptTypeSubtasksRefiner, refinerContext["user"])
 			if err != nil {
 				return nil, wrapErrorEndEvaluatorSpan(ctx, refinerEvaluator, "failed to get task subtasks refiner template (3)", err)
@@ -454,6 +455,26 @@ func (fp *flowProvider) RefineSubtasks(ctx context.Context, taskID int64) ([]too
 
 	subtasks, err := fp.performSubtasksRefiner(ctx, taskID, subtasksInfo.Planned, systemRefinerTmpl, refinerTmpl, tasksInfo.Task.Input)
 	if err != nil {
+		// Fail-open fallback: if refiner chain cannot produce a valid patch (e.g. provider
+		// keeps emitting MALFORMED_FUNCTION_CALL, or the chain can't recover otherwise) and
+		// we already have a planned subtasks list, keep the original plan and continue the
+		// flow instead of killing the whole task. This prevents a single bad refiner turn
+		// from stopping the entire flow at its very first step.
+		if len(subtasksInfo.Planned) > 0 {
+			logger.WithError(err).Warn("subtasks refiner failed, falling back to original planned subtasks to keep flow alive")
+			fallback := make([]tools.SubtaskInfo, 0, len(subtasksInfo.Planned))
+			for _, st := range subtasksInfo.Planned {
+				fallback = append(fallback, tools.SubtaskInfo{
+					Title:       st.Title,
+					Description: st.Description,
+				})
+			}
+			refinerEvaluator.End(
+				langfuse.WithEvaluatorStatus(fmt.Sprintf("degraded: refiner failed, using planned subtasks: %s", err.Error())),
+				langfuse.WithEvaluatorOutput(fallback),
+			)
+			return fallback, nil
+		}
 		return nil, wrapErrorEndEvaluatorSpan(ctx, refinerEvaluator, "failed to perform subtasks refiner", err)
 	}
 
@@ -515,22 +536,22 @@ func (fp *flowProvider) GetTaskResult(ctx context.Context, taskID int64) (*tools
 		summarizerHandler := fp.GetSummarizeResultHandler(&taskID, nil)
 		executionState, err := fp.getTaskPrimaryAgentChainSummary(ctx, taskID, summarizerHandler)
 		if err != nil {
-			return nil, wrapErrorEndEvaluatorSpan(ctx, reporterEvaluator, "failed to prepare execution state", err)
-		}
-
-		reporterContext["user"]["ExecutionState"] = executionState
-		reporterTmpl, err = fp.prompter.RenderTemplate(templates.PromptTypeTaskReporter, reporterContext["user"])
-		if err != nil {
-			return nil, wrapErrorEndEvaluatorSpan(ctx, reporterEvaluator, "failed to get task reporter template (2)", err)
+			logrus.WithContext(ctx).WithError(err).Warn("failed to prepare execution state for report, continuing without execution state")
+		} else {
+			reporterContext["user"]["ExecutionState"] = executionState
+			reporterTmpl, err = fp.prompter.RenderTemplate(templates.PromptTypeTaskReporter, reporterContext["user"])
+			if err != nil {
+				return nil, wrapErrorEndEvaluatorSpan(ctx, reporterEvaluator, "failed to get task reporter template (2)", err)
+			}
 		}
 
 		if len(reporterTmpl) < msgReporterSizeLimit {
 			msgLogsSummary, err := fp.getTaskMsgLogsSummary(ctx, taskID, summarizerHandler)
 			if err != nil {
-				return nil, wrapErrorEndEvaluatorSpan(ctx, reporterEvaluator, "failed to get task msg logs summary", err)
+				logrus.WithContext(ctx).WithError(err).Warn("failed to get task msg logs summary for report, continuing without execution logs")
+			} else {
+				reporterContext["user"]["ExecutionLogs"] = msgLogsSummary
 			}
-
-			reporterContext["user"]["ExecutionLogs"] = msgLogsSummary
 			reporterTmpl, err = fp.prompter.RenderTemplate(templates.PromptTypeTaskReporter, reporterContext["user"])
 			if err != nil {
 				return nil, wrapErrorEndEvaluatorSpan(ctx, reporterEvaluator, "failed to get task reporter template (3)", err)
@@ -836,6 +857,32 @@ func (fp *flowProvider) PerformAgentChain(ctx context.Context, taskID, subtaskID
 		ctx, optAgentType, msgChain.ID, &taskID, &subtaskID, chain, executor, fp.summarizer,
 	)
 	if err != nil {
+		// Fail-open for deterministic provider failures at primary agent level.
+		// If provider keeps returning malformed function-calls, don't abort the whole task loop;
+		// mark this subtask as failed and continue with the next subtask.
+		if isNonRetriableChainError(err) {
+			fallbackResult := fmt.Sprintf(
+				"primary agent failed with non-retriable provider error and subtask was marked failed: %s",
+				err.Error(),
+			)
+			logger.WithError(err).Warn("primary agent failed with non-retriable provider error, marking subtask failed and continuing task")
+
+			// Best-effort result update for visibility in UI/reporting.
+			if _, updateErr := fp.db.UpdateSubtaskResult(ctx, database.UpdateSubtaskResultParams{
+				Result: fallbackResult,
+				ID:     subtaskID,
+			}); updateErr != nil {
+				logger.WithError(updateErr).Warn("failed to update subtask result for non-retriable primary agent error")
+			}
+
+			executorAgent.End(
+				langfuse.WithAgentOutput(fallbackResult),
+				langfuse.WithAgentStatus("degraded: non-retriable primary agent failure"),
+				langfuse.WithAgentLevel(langfuse.ObservationLevelWarning),
+			)
+			return PerformResultError, nil
+		}
+
 		return PerformResultError, wrapErrorEndAgentSpan(ctx, executorAgent, "failed to perform primary agent chain", err)
 	}
 

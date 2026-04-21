@@ -91,6 +91,12 @@ func (rd *repeatingDetector) clearCallArguments(toolCall *llms.FunctionCall) llm
 		return *toolCall
 	}
 
+	// Ignore highly-volatile fields to detect unproductive tool loops more reliably.
+	// For file update loops, content often changes slightly between attempts while the
+	// operation remains effectively the same.
+	if action, ok := v["action"].(string); ok && action == "update_file" {
+		delete(v, "content")
+	}
 	delete(v, "message")
 	var keys []string
 	for k := range v {
@@ -670,7 +676,12 @@ func (fp *flowProvider) prepareExecutionContext(ctx context.Context, taskID, sub
 	summarizeHandler := fp.GetSummarizeResultHandler(&taskID, &subtaskID)
 	executionContext, err := summarizeHandler(ctx, executionContextRaw)
 	if err != nil {
-		return "", wrapErrorEndEvaluatorSpan(ctx, evaluator, "failed to summarize execution context", err)
+		// Fail-open: keep flow running with raw (trimmed) context if summarizer is temporarily unavailable.
+		logrus.WithContext(ctx).WithError(err).Warn("failed to summarize execution context, falling back to trimmed raw context")
+		executionContext = executionContextRaw
+		if len(executionContext) > msgSummarizerLimit {
+			executionContext = executionContext[:msgSummarizerLimit] + "\n\n{TRUNCATED}"
+		}
 	}
 
 	evaluator.End(

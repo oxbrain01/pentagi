@@ -717,7 +717,11 @@ func (fw *flowWorker) worker() {
 			spanName := fmt.Sprintf("continue task %d: %s", task.GetTaskID(), task.GetTitle())
 			if err := fw.runTask(spanName, input, task); err != nil {
 				if errors.Is(err, context.Canceled) {
-					getLogger(input, task).Info("flow are going to be stopped by user")
+					logger := getLogger(input, task)
+					if cause := context.Cause(fw.ctx); cause != nil {
+						logger = logger.WithField("cancel_cause", cause.Error())
+					}
+					logger.WithError(err).Info("flow task loop stopped by context cancellation")
 					return
 				} else {
 					getLogger(input, task).WithError(err).Error("failed to continue task")
@@ -735,7 +739,11 @@ func (fw *flowWorker) worker() {
 	for flin := range fw.input {
 		if task, err := fw.processInput(flin); err != nil {
 			if errors.Is(err, context.Canceled) {
-				getLogger(flin.input, task).Info("flow are going to be stopped by user")
+				logger := getLogger(flin.input, task)
+				if cause := context.Cause(fw.ctx); cause != nil {
+					logger = logger.WithField("cancel_cause", cause.Error())
+				}
+				logger.WithError(err).Info("flow input loop stopped by context cancellation")
 				return
 			} else {
 				getLogger(flin.input, task).WithError(err).Error("failed to process input")

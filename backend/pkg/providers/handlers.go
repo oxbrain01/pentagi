@@ -3,6 +3,7 @@ package providers
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -887,7 +888,17 @@ func (fp *flowProvider) GetSummarizeResultHandler(taskID, subtaskID *int64) tool
 
 		opt := pconfig.OptionsTypeSimple
 		msgChainType := database.MsgchainTypeSummarizer
-		summary, err := fp.performSimpleChain(ctx, taskID, subtaskID, opt, msgChainType, systemSummarizerTmpl, result)
+		var summary string
+		for attempt := 0; attempt < 2; attempt++ {
+			summary, err = fp.performSimpleChain(ctx, taskID, subtaskID, opt, msgChainType, systemSummarizerTmpl, result)
+			if err == nil {
+				break
+			}
+			if errors.Is(err, context.Canceled) || ctx.Err() != nil {
+				break
+			}
+			logrus.WithContext(ctx).WithError(err).WithField("attempt", attempt+1).Warn("failed to get summary, retrying once")
+		}
 		if err != nil {
 			return "", wrapErrorEndAgentSpan(ctx, summarizerAgent, "failed to get summary", err)
 		}

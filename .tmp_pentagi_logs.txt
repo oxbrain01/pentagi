@@ -1,0 +1,536 @@
+service ssl crt and key already exist
+time="2026-04-21T07:59:28Z" level=info msg="Starting PentAGI develop"
+2026/04/21 07:59:28 goose: no migrations to run. current version: 20260310
+2026/04/21 07:59:28 Database schema updated successfully
+time="2026-04-21T07:59:30Z" level=info msg="flow workspace auto-seed enabled (copies into empty /work when terminal starts)" flow_workspace_seed_dir=/flow-workspace-seed
+time="2026-04-21T07:59:30Z" level=info msg="flow loaded from DB" flow_id=121 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:30Z" level=info msg="flow loaded from DB" flow_id=119 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:31Z" level=info msg="flow loaded from DB" flow_id=118 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:31Z" level=info msg="flow loaded from DB" flow_id=116 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:31Z" level=info msg="flow loaded from DB" flow_id=107 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:31Z" level=info msg="flow loaded from DB" flow_id=97 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:31Z" level=info msg="flow loaded from DB" flow_id=95 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:32Z" level=info msg="flow loaded from DB" flow_id=94 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:32Z" level=info msg="flow loaded from DB" flow_id=93 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:32Z" level=info msg="flow loaded from DB" flow_id=87 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:32Z" level=info msg="flow loaded from DB" flow_id=86 provider_name=gemini-2.5-flashlite provider_type=gemini user_id=1
+time="2026-04-21T07:59:32Z" level=info msg="flow loaded from DB" flow_id=84 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T07:59:32Z" level=info msg="flow loaded from DB" flow_id=83 provider_name=gemini-2.5-flashlite provider_type=gemini user_id=1
+time="2026-04-21T07:59:32Z" level=info msg="flow loaded from DB" flow_id=66 provider_name=gemini-2.5-flashlite provider_type=gemini user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="flow loaded from DB" flow_id=48 provider_name=OPEN_AI_KEY provider_type=openai user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="flow loaded from DB" flow_id=47 provider_name=OPEN_AI_KEY provider_type=openai user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="flow loaded from DB" flow_id=39 provider_name=OPEN_AI_KEY provider_type=openai user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="flow loaded from DB" flow_id=33 provider_name=OPEN_AI_KEY provider_type=openai user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="flow loaded from DB" flow_id=32 provider_name=OPEN_AI_KEY provider_type=openai user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="flow loaded from DB" flow_id=30 provider_name=OPEN_AI_KEY provider_type=openai user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="flow loaded from DB" flow_id=5 provider_name=gemini-free provider_type=gemini user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="flow loaded from DB" flow_id=4 provider_name=gemini provider_type=gemini user_id=1
+time="2026-04-21T07:59:33Z" level=info msg="SELECT count(*) FROM \"users\"  WHERE (type = 'local')" component=pentagi-gorm duration=4.553458ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:60" type=sql values="[]"
+time="2026-04-21T07:59:33Z" level=info msg="API server listening on 0.0.0.0:8443"
+time="2026-04-21T07:59:33Z" level=info msg="Starting server with TLS enabled"
+2026/04/21 07:59:45 http: TLS handshake error from 172.18.0.1:61374: remote error: tls: unknown certificate
+time="2026-04-21T07:59:45Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') ORDER BY \"users\".\"id\" ASC LIMIT 1" component=pentagi-gorm duration=48.815167ms rows_returned=1 src="pentagi/pkg/server/auth/users_cache.go:58" type=sql values="[1]"
+time="2026-04-21T07:59:45Z" level=info msg="graphql websocket upgrade" component=pentagi-gql uid=1
+2026/04/21 07:59:49 http: TLS handshake error from 172.18.0.1:61394: remote error: tls: unknown certificate
+time="2026-04-21T07:59:49Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=7.613375ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 07:59:49 | 200 |    6.608167ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T07:59:49Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.460083ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T07:59:49Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.799417ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+time="2026-04-21T07:59:49Z" level=info msg="session was refreshed for 'admin@pentagi.com' 'admin'" age=14400 exp=1776772789 gtm=1776758389 prm="[users.create users.delete users.edit users.view roles.view providers.view screenshots.admin screenshots.view screenshots.download screenshots.subscribe msglogs.admin msglogs.view msglogs.subscribe termlogs.admin termlogs.view termlogs.subscribe flows.admin flows.create flows.delete flows.edit flows.view flows.subscribe tasks.admin tasks.view tasks.subscribe subtasks.admin subtasks.view containers.admin containers.view agentlogs.admin agentlogs.view agentlogs.subscribe vecstorelogs.admin vecstorelogs.view vecstorelogs.subscribe searchlogs.admin searchlogs.view searchlogs.subscribe assistants.admin assistants.create assistants.delete assistants.edit assistants.view assistants.subscribe assistantlogs.admin assistantlogs.view assistantlogs.subscribe settings.admin settings.view settings.providers.admin settings.providers.view settings.providers.edit settings.providers.subscribe settings.prompts.admin settings.prompts.view settings.prompts.edit usage.admin usage.view settings.tokens.admin settings.tokens.create settings.tokens.view settings.tokens.edit settings.tokens.delete settings.tokens.subscribe settings.user.admin settings.user.view settings.user.edit settings.user.subscribe]" rid=1 tid=local uhash=6b9ec9a8def2f8cb3ffc2617c4361e62 uid=1
+[GIN] 2026/04/21 - 07:59:49 | 200 |   17.603833ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 07:59:55 | 200 |   45.948541ms |      172.18.0.1 | POST     "/api/v1/graphql"
+2026/04/21 07:59:57 http: TLS handshake error from 172.18.0.1:61568: remote error: tls: unknown certificate
+time="2026-04-21T07:59:57Z" level=info msg="graphql websocket upgrade" component=pentagi-gql uid=1
+2026/04/21 07:59:58 http: TLS handshake error from 172.18.0.1:61592: remote error: tls: unknown certificate
+2026/04/21 07:59:58 http: TLS handshake error from 172.18.0.1:61602: remote error: tls: unknown certificate
+time="2026-04-21T07:59:58Z" level=info msg="graphql websocket upgrade" component=pentagi-gql uid=1
+time="2026-04-21T07:59:58Z" level=info msg="graphql websocket upgrade" component=pentagi-gql uid=1
+[GIN] 2026/04/21 - 07:59:59 | 200 |    6.063709ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T07:59:59Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=11.566417ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T07:59:59Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="565.208µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T07:59:59Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="264.208µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 07:59:59 | 200 |   19.037792ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:00:01Z" level=info msg="flow created in DB" flow_id=124 provider_name=Gemini-2.5.flash provider_type=gemini user_id=1
+time="2026-04-21T08:00:28Z" level=info msg="running container" flow_id=124 host_dir= image="vxcontrol/kali-linux:latest" name=pentagi-terminal-124 type=primary work_dir=/opt/pentagi/data/flow-124
+time="2026-04-21T08:00:28Z" level=info msg="creating container" flow_id=124 host_dir= image="vxcontrol/kali-linux:latest" name=pentagi-terminal-124 type=primary work_dir=/opt/pentagi/data/flow-124
+time="2026-04-21T08:00:28Z" level=info msg="container created" flow_id=124 host_dir= image="vxcontrol/kali-linux:latest" local_id=0f7b3229323322a9e3fedcfca51279c3e0bd71e0db313c4eb9727514591dc92e name=pentagi-terminal-124 type=primary work_dir=/opt/pentagi/data/flow-124
+time="2026-04-21T08:00:29Z" level=info msg="container started" flow_id=124 host_dir= image="vxcontrol/kali-linux:latest" local_id=0f7b3229323322a9e3fedcfca51279c3e0bd71e0db313c4eb9727514591dc92e name=pentagi-terminal-124 type=primary work_dir=/opt/pentagi/data/flow-124
+time="2026-04-21T08:00:29Z" level=info msg="flow workspace seed: copying into container volume" container_id=0f7b3229323322a9e3fedcfca51279c3e0bd71e0db313c4eb9727514591dc92e flow_id=124 host_dir= image="vxcontrol/kali-linux:latest" local_id=0f7b3229323322a9e3fedcfca51279c3e0bd71e0db313c4eb9727514591dc92e name=pentagi-terminal-124 seed_src=/flow-workspace-seed type=primary work_dir=/work
+[GIN] 2026/04/21 - 08:00:31 | 200 | 30.770194973s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:00:31 | 200 |     578.166µs |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:00:31Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=11.666709ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:00:31Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="909.291µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:00:31Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="781.292µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:00:31 | 200 |   16.647542ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:00:31 | 200 |   22.631292ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:00:32 | 200 |   74.867375ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:01:53Z" level=warning msg="got message instead of tool call" agent=reflector content="Đã kiểm tra môi trường làm việc và thu thập dấu vân tay dự án.\n\nDựa trên phân tích đầu ra, tôi xác nhận các điểm sau:\n- **Xác nhận kho lưu trữ `gband.web`**: Thư mục `/work` chứa một ứng dụng web Next.js với các tệp như `package.json`, `next.config.mjs`, `middleware.ts`, và các tệp `.tsx` trong `src/app` và `src/hooks`. Cấu trúc này phù hợp với một kho lưu trữ web `gband.web` như mong đợi.\n- **Ngôn ngữ lập trình được sử dụng**:\n    - **TypeScript**: Được chỉ ra bởi các tệp `.ts` và `.tsx` (ví dụ: `middleware.ts`, `src/app/layout.tsx`, `src/hooks/use-mobile.ts`).\n    - **JavaScript**: Được chỉ ra bởi các tệp `.mjs` (ví dụ: `next.config.mjs`).\n    - **CSS**: Được sử dụng cho kiểu dáng (ví dụ: `src/app/globals.css`).\n    - **Docker**: Được chỉ ra bởi `Dockerfile` và các tệp `docker-compose*.yml`.\n    - **Make**: Được chỉ ra bởi `Mak" flow_id=124 iteration=1 msg_chain_id=5006 origin=pentester provider=gemini subtask_id=2008 task_id=69
+[GIN] 2026/04/21 - 08:06:05 | 200 |          6m7s |      172.18.0.1 | GET      "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:08 | 200 |    4.368375ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+[GIN] 2026/04/21 - 08:06:08 | 200 |    7.344416ms |      172.18.0.1 | GET      "/assets/trash-B90ZLXYh.js"
+[GIN] 2026/04/21 - 08:06:08 | 200 |    7.731292ms |      172.18.0.1 | GET      "/assets/select-C0t6_KnB.js"
+[GIN] 2026/04/21 - 08:06:08 | 200 |    7.732833ms |      172.18.0.1 | GET      "/assets/status-card-BRQOLZ7_.js"
+[GIN] 2026/04/21 - 08:06:08 | 200 |    9.866833ms |      172.18.0.1 | GET      "/assets/flows-DJGUKvri.js"
+[GIN] 2026/04/21 - 08:06:08 | 200 |   10.050333ms |      172.18.0.1 | GET      "/assets/use-adaptive-column-visibility-3dWRyS1D.js"
+time="2026-04-21T08:06:08Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') ORDER BY \"users\".\"id\" ASC LIMIT 1" component=pentagi-gorm duration=7.330625ms rows_returned=1 src="pentagi/pkg/server/auth/users_cache.go:58" type=sql values="[1]"
+time="2026-04-21T08:06:08Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration="829.083µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:08Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.15475ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:08Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="464.833µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+time="2026-04-21T08:06:08Z" level=info msg="session was refreshed for 'admin@pentagi.com' 'admin'" age=14400 exp=1776773168 gtm=1776758768 prm="[users.create users.delete users.edit users.view roles.view providers.view screenshots.admin screenshots.view screenshots.download screenshots.subscribe msglogs.admin msglogs.view msglogs.subscribe termlogs.admin termlogs.view termlogs.subscribe flows.admin flows.create flows.delete flows.edit flows.view flows.subscribe tasks.admin tasks.view tasks.subscribe subtasks.admin subtasks.view containers.admin containers.view agentlogs.admin agentlogs.view agentlogs.subscribe vecstorelogs.admin vecstorelogs.view vecstorelogs.subscribe searchlogs.admin searchlogs.view searchlogs.subscribe assistants.admin assistants.create assistants.delete assistants.edit assistants.view assistants.subscribe assistantlogs.admin assistantlogs.view assistantlogs.subscribe settings.admin settings.view settings.providers.admin settings.providers.view settings.providers.edit settings.providers.subscribe settings.prompts.admin settings.prompts.view settings.prompts.edit usage.admin usage.view settings.tokens.admin settings.tokens.create settings.tokens.view settings.tokens.edit settings.tokens.delete settings.tokens.subscribe settings.user.admin settings.user.view settings.user.edit settings.user.subscribe]" rid=1 tid=local uhash=6b9ec9a8def2f8cb3ffc2617c4361e62 uid=1
+[GIN] 2026/04/21 - 08:06:08 | 200 |   15.497708ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:06:12 | 200 |    7.792042ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:06:12Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=12.595042ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:12Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="478.25µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:12 | 200 |   22.074584ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:06:12Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.751083ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:12 | 200 |   33.275458ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:12 | 200 |  131.873375ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:16 | 200 |     6.28275ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:06:16Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=20.707791ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:16Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="716.166µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:16Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="711.417µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:16 | 200 |   29.487042ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:06:24Z" level=info msg="removing container and associated resources" local_id=8ed26599ce9e443e8c8c445ca164895816ede9c2aa6099a9257218064ae99289
+time="2026-04-21T08:06:24Z" level=info msg="initiating container shutdown sequence" local_id=8ed26599ce9e443e8c8c445ca164895816ede9c2aa6099a9257218064ae99289
+time="2026-04-21T08:06:24Z" level=warning msg="target container already removed or never existed" local_id=8ed26599ce9e443e8c8c445ca164895816ede9c2aa6099a9257218064ae99289
+time="2026-04-21T08:06:24Z" level=info msg="container shutdown completed successfully" local_id=8ed26599ce9e443e8c8c445ca164895816ede9c2aa6099a9257218064ae99289
+time="2026-04-21T08:06:24Z" level=warning msg="container not found" error="Error response from daemon: No such container: 8ed26599ce9e443e8c8c445ca164895816ede9c2aa6099a9257218064ae99289" local_id=8ed26599ce9e443e8c8c445ca164895816ede9c2aa6099a9257218064ae99289
+time="2026-04-21T08:06:24Z" level=info msg="container removed" local_id=8ed26599ce9e443e8c8c445ca164895816ede9c2aa6099a9257218064ae99289
+[GIN] 2026/04/21 - 08:06:24 | 200 |  113.386292ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:26 | 200 |    3.867375ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:06:26Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=10.912458ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:26Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.163875ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:26 | 200 |   17.980958ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:06:26Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=2.524083ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:26 | 200 |   59.821792ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:26 | 200 |     61.6975ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:26 | 200 |    9.654875ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:29 | 200 |    1.095708ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:06:29Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=2.159333ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:29Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="441.375µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:29Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.82675ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:29 | 200 |   16.355708ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:06:34Z" level=info msg="removing container and associated resources" local_id=593ad934e066bc6a199e221d8a6c8d21ee8aa27f96ba7321bc88ee795703e3a9
+time="2026-04-21T08:06:34Z" level=info msg="initiating container shutdown sequence" local_id=593ad934e066bc6a199e221d8a6c8d21ee8aa27f96ba7321bc88ee795703e3a9
+time="2026-04-21T08:06:34Z" level=warning msg="target container already removed or never existed" local_id=593ad934e066bc6a199e221d8a6c8d21ee8aa27f96ba7321bc88ee795703e3a9
+time="2026-04-21T08:06:34Z" level=info msg="container shutdown completed successfully" local_id=593ad934e066bc6a199e221d8a6c8d21ee8aa27f96ba7321bc88ee795703e3a9
+time="2026-04-21T08:06:34Z" level=warning msg="container not found" error="Error response from daemon: No such container: 593ad934e066bc6a199e221d8a6c8d21ee8aa27f96ba7321bc88ee795703e3a9" local_id=593ad934e066bc6a199e221d8a6c8d21ee8aa27f96ba7321bc88ee795703e3a9
+time="2026-04-21T08:06:34Z" level=info msg="container removed" local_id=593ad934e066bc6a199e221d8a6c8d21ee8aa27f96ba7321bc88ee795703e3a9
+[GIN] 2026/04/21 - 08:06:34 | 200 |   55.569292ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:36 | 200 |    7.904333ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+[GIN] 2026/04/21 - 08:06:36 | 200 |   20.947125ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:06:36Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=30.486375ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:36Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.233333ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:36Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.357375ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:36 | 200 |     39.1925ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:06:36 | 200 |  137.881709ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:39 | 200 |    1.248959ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:06:39Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=2.632209ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:39Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="485.5µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:39Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="520.542µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:39 | 200 |    6.881833ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:06:44Z" level=info msg="removing container and associated resources" local_id=7a0964baa9ba87de98b39922a0b55773b9da1caf6c4b5623ab9dc248666c7697
+time="2026-04-21T08:06:44Z" level=info msg="initiating container shutdown sequence" local_id=7a0964baa9ba87de98b39922a0b55773b9da1caf6c4b5623ab9dc248666c7697
+time="2026-04-21T08:06:45Z" level=info msg="container shutdown completed successfully" local_id=7a0964baa9ba87de98b39922a0b55773b9da1caf6c4b5623ab9dc248666c7697
+time="2026-04-21T08:06:46Z" level=info msg="container removed" local_id=7a0964baa9ba87de98b39922a0b55773b9da1caf6c4b5623ab9dc248666c7697
+[GIN] 2026/04/21 - 08:06:46 | 200 |  1.725945584s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:50 | 200 |     3.19275ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:06:50Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=24.489583ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:50Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=3.630375ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:50Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.60225ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:50 | 200 |   45.333667ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:06:50 | 200 |   81.827292ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:50 | 200 |  289.025583ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:06:56 | 200 |    1.451458ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:06:56Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=4.443667ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:56Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="436.375µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:06:56Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="847.25µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:06:56 | 200 |    8.905542ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:07:01Z" level=info msg="removing container and associated resources" local_id=1268f033478e45314a75d772a2b69ca6f9870b2c47efa8b031ecff1260471c18
+time="2026-04-21T08:07:01Z" level=info msg="initiating container shutdown sequence" local_id=1268f033478e45314a75d772a2b69ca6f9870b2c47efa8b031ecff1260471c18
+time="2026-04-21T08:07:02Z" level=info msg="container shutdown completed successfully" local_id=1268f033478e45314a75d772a2b69ca6f9870b2c47efa8b031ecff1260471c18
+time="2026-04-21T08:07:02Z" level=info msg="container removed" local_id=1268f033478e45314a75d772a2b69ca6f9870b2c47efa8b031ecff1260471c18
+[GIN] 2026/04/21 - 08:07:02 | 200 |  1.462918459s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:07:05 | 200 |    3.770292ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:07:05Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=12.592875ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:07:05Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.325708ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:07:05Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.247ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:07:05 | 200 |   21.368583ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:07:05 | 200 |   26.316708ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:07:05 | 200 |  122.169917ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:07:09 | 200 |     971.834µs |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:07:09Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=2.409833ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:07:09Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="311.042µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:07:09Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="255.292µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:07:09 | 200 |    4.433042ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:07:13Z" level=info msg="removing container and associated resources" local_id=328a35e426e429d51b4210ef26f424d001b82121e4cbb78875f01e1e31a5cf66
+time="2026-04-21T08:07:13Z" level=info msg="initiating container shutdown sequence" local_id=328a35e426e429d51b4210ef26f424d001b82121e4cbb78875f01e1e31a5cf66
+time="2026-04-21T08:07:14Z" level=info msg="container shutdown completed successfully" local_id=328a35e426e429d51b4210ef26f424d001b82121e4cbb78875f01e1e31a5cf66
+time="2026-04-21T08:07:15Z" level=info msg="container removed" local_id=328a35e426e429d51b4210ef26f424d001b82121e4cbb78875f01e1e31a5cf66
+[GIN] 2026/04/21 - 08:07:15 | 200 |  1.571124751s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:07:19 | 200 |      4.1915ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:07:19Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=21.994459ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:07:19Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=4.088625ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:07:19Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=3.517875ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:07:19 | 200 |     44.8255ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:07:19 | 200 |   49.598666ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:07:19 | 200 |  121.978333ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:07:19 | 200 |    28.27675ms |      172.18.0.1 | GET      "/fonts/inter-italic.woff2"
+[GIN] 2026/04/21 - 08:07:25 | 200 |      5.4435ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:07:25Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=5.133084ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:07:25Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="554.417µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:07:25Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="547.875µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:07:25 | 200 |     9.01575ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:07:29Z" level=info msg="removing container and associated resources" local_id=3b77ac5e7c305dd927c5930269b2333e6da68b5815061ada60469826f14ec953
+time="2026-04-21T08:07:29Z" level=info msg="initiating container shutdown sequence" local_id=3b77ac5e7c305dd927c5930269b2333e6da68b5815061ada60469826f14ec953
+time="2026-04-21T08:07:31Z" level=info msg="container shutdown completed successfully" local_id=3b77ac5e7c305dd927c5930269b2333e6da68b5815061ada60469826f14ec953
+time="2026-04-21T08:07:31Z" level=info msg="container removed" local_id=3b77ac5e7c305dd927c5930269b2333e6da68b5815061ada60469826f14ec953
+[GIN] 2026/04/21 - 08:07:31 | 200 |  1.430301584s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:08:03 | 200 |    11.54625ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:08:03Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=20.714459ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:03Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.588209ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:03Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=2.399083ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:08:03 | 200 |   42.568084ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:08:03 | 200 |  102.978125ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:08:03 | 200 |  348.145334ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:08:06 | 200 |    7.536083ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:08:06Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=13.368833ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:06Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.948625ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:06Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="721.75µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:08:06 | 200 |   34.339042ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:08:11Z" level=info msg="removing container and associated resources" local_id=0aa742a34a92094ce537b274803acf7b2e0a9731fa10b752f877c503d98cf699
+time="2026-04-21T08:08:11Z" level=info msg="initiating container shutdown sequence" local_id=0aa742a34a92094ce537b274803acf7b2e0a9731fa10b752f877c503d98cf699
+time="2026-04-21T08:08:12Z" level=info msg="container shutdown completed successfully" local_id=0aa742a34a92094ce537b274803acf7b2e0a9731fa10b752f877c503d98cf699
+time="2026-04-21T08:08:13Z" level=info msg="container removed" local_id=0aa742a34a92094ce537b274803acf7b2e0a9731fa10b752f877c503d98cf699
+[GIN] 2026/04/21 - 08:08:13 | 200 |  1.622998626s |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:08:31Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=21.171792ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:08:31 | 200 |   59.640583ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:08:31 | 200 |   35.740167ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:08:31Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="415.291µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:31Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="996.334µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:08:31 | 200 |   63.321792ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:08:31 | 200 |  338.163125ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:08:34 | 200 |    5.250375ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:08:34Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=4.947792ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:34Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.434541ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:34Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.029833ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:08:34 | 200 |     12.0335ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:08:36 | 200 |    3.943042ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:08:36Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=12.831417ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:36Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="763.958µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:36Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="599.334µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:08:36 | 200 |   20.278459ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:08:38 | 200 |     770.834µs |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:08:38Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=2.222125ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:38Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="478.583µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:08:38Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="421.209µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:08:38 | 200 |    4.316167ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:08:42Z" level=info msg="removing container and associated resources" local_id=98d259164a2f137620fe3b82c09a64b605e13aa1d868dfc8e47fcaa4fcc6b96d
+time="2026-04-21T08:08:42Z" level=info msg="initiating container shutdown sequence" local_id=98d259164a2f137620fe3b82c09a64b605e13aa1d868dfc8e47fcaa4fcc6b96d
+time="2026-04-21T08:08:43Z" level=info msg="container shutdown completed successfully" local_id=98d259164a2f137620fe3b82c09a64b605e13aa1d868dfc8e47fcaa4fcc6b96d
+time="2026-04-21T08:08:44Z" level=info msg="container removed" local_id=98d259164a2f137620fe3b82c09a64b605e13aa1d868dfc8e47fcaa4fcc6b96d
+[GIN] 2026/04/21 - 08:08:44 | 200 |  1.516505834s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:09:04 | 200 |     4.54975ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:09:04Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=11.131792ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:09:04Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="766.208µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:09:04Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=2.432167ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:09:04 | 200 |   23.602292ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:09:04 | 200 |   80.212583ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:09:04 | 200 |     85.2025ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:09:10 | 200 |    1.396084ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:09:10Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=2.563333ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:09:10Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="844.792µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:09:10Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.328042ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:09:10 | 200 |    7.995208ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:09:14Z" level=info msg="removing container and associated resources" local_id=6da92cdb9a7ab4a61fbb2f857b095fc6ee91daf88ecb44704aca6f92afd3a564
+time="2026-04-21T08:09:14Z" level=info msg="initiating container shutdown sequence" local_id=6da92cdb9a7ab4a61fbb2f857b095fc6ee91daf88ecb44704aca6f92afd3a564
+time="2026-04-21T08:09:14Z" level=warning msg="target container already removed or never existed" local_id=6da92cdb9a7ab4a61fbb2f857b095fc6ee91daf88ecb44704aca6f92afd3a564
+time="2026-04-21T08:09:14Z" level=info msg="container shutdown completed successfully" local_id=6da92cdb9a7ab4a61fbb2f857b095fc6ee91daf88ecb44704aca6f92afd3a564
+time="2026-04-21T08:09:14Z" level=warning msg="container not found" error="Error response from daemon: No such container: 6da92cdb9a7ab4a61fbb2f857b095fc6ee91daf88ecb44704aca6f92afd3a564" local_id=6da92cdb9a7ab4a61fbb2f857b095fc6ee91daf88ecb44704aca6f92afd3a564
+time="2026-04-21T08:09:14Z" level=info msg="container removed" local_id=6da92cdb9a7ab4a61fbb2f857b095fc6ee91daf88ecb44704aca6f92afd3a564
+[GIN] 2026/04/21 - 08:09:14 | 200 |   40.898292ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:09:21Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=22.917292ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:09:21 | 200 |   26.660584ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:09:21 | 200 |    4.370542ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:09:21Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=4.10125ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:09:21Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="959.583µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:09:21 | 200 |   34.644958ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:09:21 | 200 |  224.514459ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:09:30 | 200 |    1.197959ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:09:30Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=5.175541ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:09:30Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.307958ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:09:30Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="579.709µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:09:30 | 200 |   11.899167ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:09:35Z" level=info msg="removing container and associated resources" local_id=3b33b5e285513b2bfdc5d07c9d115860a70cc368d12ec0bea6f90c1c5cf254ee
+time="2026-04-21T08:09:35Z" level=info msg="initiating container shutdown sequence" local_id=3b33b5e285513b2bfdc5d07c9d115860a70cc368d12ec0bea6f90c1c5cf254ee
+time="2026-04-21T08:09:36Z" level=info msg="container shutdown completed successfully" local_id=3b33b5e285513b2bfdc5d07c9d115860a70cc368d12ec0bea6f90c1c5cf254ee
+time="2026-04-21T08:09:36Z" level=info msg="container removed" local_id=3b33b5e285513b2bfdc5d07c9d115860a70cc368d12ec0bea6f90c1c5cf254ee
+[GIN] 2026/04/21 - 08:09:36 | 200 |  1.639028584s |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:09:43Z" level=error msg="graphql request handled with errors" component=pentagi-gql duration=13.322209ms gql.errors="input: deleteFlow sql: no rows in result set\n" operation_name=deleteFlow operation_type=mutation
+[GIN] 2026/04/21 - 08:09:43 | 200 |    25.27175ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:10:07Z" level=error msg="graphql request handled with errors" component=pentagi-gql duration=5.555125ms gql.errors="input: deleteFlow sql: no rows in result set\n" operation_name=deleteFlow operation_type=mutation
+[GIN] 2026/04/21 - 08:10:07 | 200 |     9.87075ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:10:14 | 200 |   13.828375ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:10:22 | 200 |    1.643541ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:10:22Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=24.012917ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:10:22 | 200 |   31.396125ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:10:22Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=5.532542ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:10:22Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=2.900416ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:10:22 | 200 |   38.255875ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:10:23 | 200 |  402.638292ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:10:23 | 200 |    9.620667ms |      172.18.0.1 | GET      "/fonts/roboto-mono-italic.woff2"
+[GIN] 2026/04/21 - 08:10:26 | 200 |    1.388791ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:10:26Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=11.051667ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:10:26Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.438667ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:10:26Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="640.875µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:10:26 | 200 |   20.710542ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:10:30Z" level=info msg="removing container and associated resources" local_id=637ec686e787c24baa51dfc240c040c54b3a698357fd9877b1d797491f076d5c
+time="2026-04-21T08:10:30Z" level=info msg="initiating container shutdown sequence" local_id=637ec686e787c24baa51dfc240c040c54b3a698357fd9877b1d797491f076d5c
+time="2026-04-21T08:10:31Z" level=info msg="container shutdown completed successfully" local_id=637ec686e787c24baa51dfc240c040c54b3a698357fd9877b1d797491f076d5c
+time="2026-04-21T08:10:32Z" level=info msg="container removed" local_id=637ec686e787c24baa51dfc240c040c54b3a698357fd9877b1d797491f076d5c
+[GIN] 2026/04/21 - 08:10:32 | 200 |     1.913508s |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:10:41Z" level=error msg="graphql request handled with errors" component=pentagi-gql duration=19.056417ms gql.errors="input: deleteFlow sql: no rows in result set\n" operation_name=deleteFlow operation_type=mutation
+[GIN] 2026/04/21 - 08:10:41 | 200 |   27.093834ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:10:49Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=refiner error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5025 retry_iteration=0 task_id=69
+time="2026-04-21T08:11:05Z" level=info msg="removing container and associated resources" local_id=112748b06ce7f24a7a930589d519736149dcdb168672b539f2f80af549817405
+time="2026-04-21T08:11:05Z" level=info msg="initiating container shutdown sequence" local_id=112748b06ce7f24a7a930589d519736149dcdb168672b539f2f80af549817405
+time="2026-04-21T08:11:07Z" level=info msg="container shutdown completed successfully" local_id=112748b06ce7f24a7a930589d519736149dcdb168672b539f2f80af549817405
+time="2026-04-21T08:11:07Z" level=info msg="container removed" local_id=112748b06ce7f24a7a930589d519736149dcdb168672b539f2f80af549817405
+[GIN] 2026/04/21 - 08:11:07 | 200 |  1.430546126s |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:11:20Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') ORDER BY \"users\".\"id\" ASC LIMIT 1" component=pentagi-gorm duration=1.772958ms rows_returned=1 src="pentagi/pkg/server/auth/users_cache.go:58" type=sql values="[1]"
+time="2026-04-21T08:11:20Z" level=error msg="graphql request handled with errors" component=pentagi-gql duration="979.375µs" gql.errors="input: deleteFlow sql: no rows in result set\n" operation_name=deleteFlow operation_type=mutation
+[GIN] 2026/04/21 - 08:11:20 | 200 |    4.300584ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:11:26 | 200 |    4.795542ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:11:26Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=9.429292ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:11:26Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=4.807208ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:11:26Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.149542ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+time="2026-04-21T08:11:26Z" level=info msg="session was refreshed for 'admin@pentagi.com' 'admin'" age=14400 exp=1776773486 gtm=1776759086 prm="[users.create users.delete users.edit users.view roles.view providers.view screenshots.admin screenshots.view screenshots.download screenshots.subscribe msglogs.admin msglogs.view msglogs.subscribe termlogs.admin termlogs.view termlogs.subscribe flows.admin flows.create flows.delete flows.edit flows.view flows.subscribe tasks.admin tasks.view tasks.subscribe subtasks.admin subtasks.view containers.admin containers.view agentlogs.admin agentlogs.view agentlogs.subscribe vecstorelogs.admin vecstorelogs.view vecstorelogs.subscribe searchlogs.admin searchlogs.view searchlogs.subscribe assistants.admin assistants.create assistants.delete assistants.edit assistants.view assistants.subscribe assistantlogs.admin assistantlogs.view assistantlogs.subscribe settings.admin settings.view settings.providers.admin settings.providers.view settings.providers.edit settings.providers.subscribe settings.prompts.admin settings.prompts.view settings.prompts.edit usage.admin usage.view settings.tokens.admin settings.tokens.create settings.tokens.view settings.tokens.edit settings.tokens.delete settings.tokens.subscribe settings.user.admin settings.user.view settings.user.edit settings.user.subscribe]" rid=1 tid=local uhash=6b9ec9a8def2f8cb3ffc2617c4361e62 uid=1
+[GIN] 2026/04/21 - 08:11:26 | 200 |   22.738334ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:11:26 | 200 |   23.588917ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:11:26 | 200 |  187.709125ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:11:30 | 200 |     897.708µs |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:11:30Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=5.910375ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:11:30Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.625333ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:11:30Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="901.792µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:11:30 | 200 |   14.813291ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:11:34Z" level=info msg="removing container and associated resources" local_id=ce283a28a400ca1b5afe0dcedfea95375b4cf10f643933b1a270ca5726c57b6c
+time="2026-04-21T08:11:34Z" level=info msg="initiating container shutdown sequence" local_id=ce283a28a400ca1b5afe0dcedfea95375b4cf10f643933b1a270ca5726c57b6c
+time="2026-04-21T08:11:35Z" level=info msg="container shutdown completed successfully" local_id=ce283a28a400ca1b5afe0dcedfea95375b4cf10f643933b1a270ca5726c57b6c
+time="2026-04-21T08:11:40Z" level=info msg="container removed" local_id=ce283a28a400ca1b5afe0dcedfea95375b4cf10f643933b1a270ca5726c57b6c
+[GIN] 2026/04/21 - 08:11:40 | 200 |  5.785220419s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:11:58 | 200 |    1.674459ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:11:58Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=10.303ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:11:58 | 200 |   16.417917ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:11:58Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=3.077417ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:11:58Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=2.902667ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:11:58 | 200 |   24.477875ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:12:03 | 200 |  5.020858544s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:12:18 | 200 |       18.76ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:12:18Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=18.222625ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:18Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="569.541µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:18Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="442.041µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:12:18 | 200 |   43.852917ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:12:23 | 200 |    2.996167ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:12:23Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=28.016542ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:23Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.900916ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:23Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=3.439834ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:12:23 | 200 |          39ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:12:23 | 200 |   46.949458ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:12:23 | 200 |  391.863459ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:12:27 | 200 |    6.567708ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:12:27Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=5.651416ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:27Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="604.25µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:27Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="691.917µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:12:27 | 200 |    9.032417ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:12:32Z" level=info msg="removing container and associated resources" local_id=e8836460099d49a7e9d046ed0720fe3d4f8cdde366f8154806e0f89dad6a2e36
+time="2026-04-21T08:12:32Z" level=info msg="initiating container shutdown sequence" local_id=e8836460099d49a7e9d046ed0720fe3d4f8cdde366f8154806e0f89dad6a2e36
+time="2026-04-21T08:12:34Z" level=info msg="container shutdown completed successfully" local_id=e8836460099d49a7e9d046ed0720fe3d4f8cdde366f8154806e0f89dad6a2e36
+time="2026-04-21T08:12:34Z" level=info msg="container removed" local_id=e8836460099d49a7e9d046ed0720fe3d4f8cdde366f8154806e0f89dad6a2e36
+[GIN] 2026/04/21 - 08:12:34 | 200 |  1.665101959s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:12:44 | 200 |      9.9275ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:12:44Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=8.497375ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:44Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.880958ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:12:44 | 200 |   24.000083ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:12:44Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.284167ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:12:44 | 200 |   27.568125ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:12:44 | 200 |  135.926042ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:12:51 | 200 |    5.320917ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:12:51Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=6.017542ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:51Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="297.583µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:12:51Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="323.708µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:12:51 | 200 |   14.457584ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:00 | 200 |    5.536792ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:00Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=9.029209ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:00Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="720.5µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:00 | 200 |   16.906209ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:13:00Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=2.141541ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+time="2026-04-21T08:13:03Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=pentester error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5037 retry_iteration=0 subtask_id=2039 task_id=69
+time="2026-04-21T08:13:04Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=1.567625ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:04Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="454.25µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:04Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="831.541µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:04 | 200 |    3.808917ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:04 | 200 |    1.589667ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+[GIN] 2026/04/21 - 08:13:06 | 200 |    5.707375ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:06Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=7.880875ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:06Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=46.69825ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:06Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=2.697084ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:06 | 200 |    71.37975ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:09 | 200 |     750.292µs |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:09Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=1.10025ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:09Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="592.958µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:09Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="466.958µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:09 | 200 |    3.276583ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:10 | 200 |    1.818959ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:10Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=7.354958ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:10Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.412958ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:10Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="821.958µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:10 | 200 |   11.892166ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:10 | 200 |   15.875125ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:13:11 | 200 |  1.348998709s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:13:18 | 200 |    1.000833ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:18Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=2.984125ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:18Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="901.5µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:18Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="604.333µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:18 | 200 |    7.534708ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:22 | 200 |    3.737333ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:22Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=11.543ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:22Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="507.042µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:22Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=2.87275ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:22 | 200 |   21.091375ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:22 | 200 |   24.533542ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:13:24 | 200 |   2.29437671s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:13:28 | 200 |    1.321666ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:28Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=2.719833ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:28Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="585.667µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:28Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="385.583µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:28 | 200 |    6.243709ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:31 | 200 |     1.96225ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:31Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=20.614042ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:31Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.933709ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:31 | 200 |   29.009875ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:13:31Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.35775ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:31 | 200 |    32.01475ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:13:31 | 200 |  314.320125ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:13:32 | 200 |    7.637042ms |      172.18.0.1 | GET      "/fonts/inter-600-italic.woff2"
+[GIN] 2026/04/21 - 08:13:35 | 200 |    2.970583ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:35Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=16.754ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:35Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.281ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:35Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.604916ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:35 | 200 |   29.555792ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:40 | 200 |     7.16475ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:13:57 | 200 |    1.855917ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:13:57Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=11.2395ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:57 | 200 |   16.200958ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:13:57Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.157ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:13:57Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="747.375µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:13:57 | 200 |   17.284083ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:13:57 | 200 |  233.794667ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:14:00 | 200 |    2.193792ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:14:00Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=9.461333ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:00Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="723.625µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:00Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="608.958µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:00 | 200 |   20.440875ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:14:02Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=1.100958ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:02Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.373542ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:02 | 200 |     685.583µs |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:14:02Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.054875ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:02 | 200 |    4.628833ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:14:02 | 200 |   26.395791ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:14:02 | 200 |   99.692208ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:14:06 | 200 |    1.685291ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:14:06Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=2.147792ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:06Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="522.542µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:06Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="500.833µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:06 | 200 |    5.913625ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:14:12Z" level=info msg="removing container and associated resources" local_id=977caed58c1649a9c9d592390da53a0b80245f144cebaa3e9727deff30101cbb
+time="2026-04-21T08:14:12Z" level=info msg="initiating container shutdown sequence" local_id=977caed58c1649a9c9d592390da53a0b80245f144cebaa3e9727deff30101cbb
+time="2026-04-21T08:14:14Z" level=info msg="container shutdown completed successfully" local_id=977caed58c1649a9c9d592390da53a0b80245f144cebaa3e9727deff30101cbb
+time="2026-04-21T08:14:15Z" level=info msg="container removed" local_id=977caed58c1649a9c9d592390da53a0b80245f144cebaa3e9727deff30101cbb
+[GIN] 2026/04/21 - 08:14:15 | 200 |  2.946040252s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:14:18 | 200 |    1.587208ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+[GIN] 2026/04/21 - 08:14:18 | 200 |    7.688625ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:14:18Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=3.581167ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:18Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.833084ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:18Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="770.333µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:18 | 200 |   13.359541ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:14:18 | 200 |  140.420208ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:14:21Z" level=warning msg="got message instead of tool call" agent=reflector content="The Trivy filesystem scan đã bắt đầu và đang trong quá trình thực hiện. Kết quả sẽ được lưu vào `/tmp/trivy_fs_results.json` sau khi hoàn tất. Tôi đang chờ lệnh hoàn thành." flow_id=124 iteration=1 msg_chain_id=5037 origin=pentester provider=gemini subtask_id=2039 task_id=69
+[GIN] 2026/04/21 - 08:14:26 | 200 |    2.700208ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:14:26Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=5.497833ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:26Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="789.5µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:26Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="692.5µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:26 | 200 |    12.47225ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:14:35Z" level=info msg="removing container and associated resources" local_id=ff5a23bd3334ef38ce3319a827f995ef1fe3ed01953fa3bff976b586b1bb03ec
+time="2026-04-21T08:14:35Z" level=info msg="initiating container shutdown sequence" local_id=ff5a23bd3334ef38ce3319a827f995ef1fe3ed01953fa3bff976b586b1bb03ec
+time="2026-04-21T08:14:36Z" level=info msg="container shutdown completed successfully" local_id=ff5a23bd3334ef38ce3319a827f995ef1fe3ed01953fa3bff976b586b1bb03ec
+time="2026-04-21T08:14:36Z" level=info msg="container removed" local_id=ff5a23bd3334ef38ce3319a827f995ef1fe3ed01953fa3bff976b586b1bb03ec
+[GIN] 2026/04/21 - 08:14:36 | 200 |  1.903606876s |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:14:39 | 200 |    3.119708ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:14:39Z" level=error msg="graphql request handled with errors" component=pentagi-gql duration=22.11225ms gql.errors="input: assistants sql: no rows in result set\n" operation_name=assistants operation_type=query
+time="2026-04-21T08:14:39Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=23.353042ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:39 | 200 |   28.467375ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:14:39Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=1.914125ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:39Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration=1.640667ms rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:39 | 200 |   38.362584ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:14:39Z" level=error msg="graphql request handled with errors" component=pentagi-gql duration=80.595083ms gql.errors="input: messageLogs sql: no rows in result set\ninput: flow sql: no rows in result set\ninput: agentLogs sql: no rows in result set\ninput: searchLogs sql: no rows in result set\ninput: vectorStoreLogs sql: no rows in result set\ninput: tasks sql: no rows in result set\ninput: screenshots sql: no rows in result set\ninput: terminalLogs sql: no rows in result set\n" operation_name=flow operation_type=query
+[GIN] 2026/04/21 - 08:14:39 | 200 |    88.12775ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:14:39 | 200 |    1.234916ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:14:40Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration="603.875µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:40Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="245.167µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:40Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="224.625µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:40 | 200 |    2.941667ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:14:46 | 200 |   28.988791ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:14:55 | 200 |    3.004083ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:14:55Z" level=error msg="graphql request handled with errors" component=pentagi-gql duration=26.178958ms gql.errors="input: assistants sql: no rows in result set\n" operation_name=assistants operation_type=query
+[GIN] 2026/04/21 - 08:14:55 | 200 |    37.70075ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:14:55Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration=27.048708ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:55Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration=2.746125ms rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:55Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="424.541µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:55 | 200 |   36.083291ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+time="2026-04-21T08:14:55Z" level=error msg="graphql request handled with errors" component=pentagi-gql duration=66.575167ms gql.errors="input: searchLogs sql: no rows in result set\ninput: flow sql: no rows in result set\ninput: messageLogs sql: no rows in result set\ninput: terminalLogs sql: no rows in result set\ninput: vectorStoreLogs sql: no rows in result set\ninput: tasks sql: no rows in result set\ninput: agentLogs sql: no rows in result set\ninput: screenshots sql: no rows in result set\n" operation_name=flow operation_type=query
+[GIN] 2026/04/21 - 08:14:55 | 200 |      73.386ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:14:55 | 200 |     536.917µs |      172.18.0.1 | GET      "/favicon/favicon.ico"
+time="2026-04-21T08:14:55Z" level=info msg="SELECT * FROM \"users\"  WHERE (id = '1') LIMIT 1" component=pentagi-gorm duration="392.334µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:55Z" level=info msg="SELECT * FROM \"roles\"  WHERE (\"id\" = '1')" component=pentagi-gorm duration="170.875µs" rows_returned=1 src="pentagi/pkg/server/services/auth.go:831" type=sql values="[1]"
+time="2026-04-21T08:14:55Z" level=info msg="SELECT name FROM \"privileges\"  WHERE (role_id = '1')" component=pentagi-gorm duration="171.416µs" rows_returned=0 src="pentagi/pkg/server/services/auth.go:840" type=sql values="[1]"
+[GIN] 2026/04/21 - 08:14:55 | 200 |    1.249459ms |      172.18.0.1 | GET      "/api/v1/info?refresh_cookie=true"
+[GIN] 2026/04/21 - 08:15:05 | 200 |      10.554ms |      172.18.0.1 | GET      "/flows"
+[GIN] 2026/04/21 - 08:15:05 | 200 |         15m7s |      172.18.0.1 | GET      "/api/v1/graphql"
+2026/04/21 08:15:06 http: TLS handshake error from 172.18.0.1:62912: remote error: tls: unknown certificate
+[GIN] 2026/04/21 - 08:15:06 | 304 |    1.294459ms |      172.18.0.1 | GET      "/assets/flows-DJGUKvri.js"
+[GIN] 2026/04/21 - 08:15:06 | 304 |     395.708µs |      172.18.0.1 | GET      "/assets/status-card-BRQOLZ7_.js"
+[GIN] 2026/04/21 - 08:15:06 | 304 |     152.209µs |      172.18.0.1 | GET      "/assets/select-C0t6_KnB.js"
+[GIN] 2026/04/21 - 08:15:06 | 304 |     727.458µs |      172.18.0.1 | GET      "/assets/use-adaptive-column-visibility-3dWRyS1D.js"
+[GIN] 2026/04/21 - 08:15:06 | 304 |     732.791µs |      172.18.0.1 | GET      "/assets/trash-B90ZLXYh.js"
+[GIN] 2026/04/21 - 08:15:06 | 200 |    3.113792ms |      172.18.0.1 | GET      "/favicon/site.webmanifest"
+[GIN] 2026/04/21 - 08:15:06 | 200 |    8.007667ms |      172.18.0.1 | GET      "/favicon/favicon.ico"
+2026/04/21 08:15:06 http: TLS handshake error from 172.18.0.1:62944: remote error: tls: unknown certificate
+[GIN] 2026/04/21 - 08:15:06 | 200 |     892.625µs |      172.18.0.1 | GET      "/favicon/favicon.svg"
+time="2026-04-21T08:15:06Z" level=info msg="graphql websocket upgrade" component=pentagi-gql uid=1
+[GIN] 2026/04/21 - 08:15:06 | 200 |   44.585042ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:15:06 | 200 |    1.064292ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:15:06 | 200 |    6.277083ms |      172.18.0.1 | POST     "/api/v1/graphql"
+[GIN] 2026/04/21 - 08:15:06 | 200 |   93.700208ms |      172.18.0.1 | POST     "/api/v1/graphql"
+time="2026-04-21T08:15:58Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=refiner error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5044 retry_iteration=0 task_id=69
+time="2026-04-21T08:18:13Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=pentester error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5051 retry_iteration=0 subtask_id=2049 task_id=69
+time="2026-04-21T08:18:27Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=pentester error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5051 retry_iteration=1 subtask_id=2049 task_id=69
+time="2026-04-21T08:18:39Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=pentester error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5051 retry_iteration=2 subtask_id=2049 task_id=69
+time="2026-04-21T08:18:44Z" level=warning msg="max retries reached, invoking caller reflector for guidance" agent=pentester error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" errors_count=3 flow_id=124 msg_chain_id=5051 provider=gemini subtask_id=2049 task_id=69
+time="2026-04-21T08:18:44Z" level=warning msg="got message instead of tool call" agent=reflector content="I'm having trouble generating a proper tool call response. I've attempted 3 times but each attempt failed with errors:\n\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\n\nI'm not sure how to proceed correctly. Should I try a different approach, or should I use one of the barrier tools to report this issue?" flow_id=124 iteration=1 msg_chain_id=5051 origin=pentester provider=gemini subtask_id=2049 task_id=69
+[GIN] 2026/04/21 - 08:20:18 | 200 |         5m12s |      172.18.0.1 | GET      "/api/v1/graphql"
+time="2026-04-21T08:21:44Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=coder error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5057 retry_iteration=0 subtask_id=2049 task_id=69
+time="2026-04-21T08:23:44Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=coder error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5057 retry_iteration=1 subtask_id=2049 task_id=69
+time="2026-04-21T08:25:00Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=coder error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5057 retry_iteration=2 subtask_id=2049 task_id=69
+time="2026-04-21T08:25:05Z" level=warning msg="max retries reached, invoking caller reflector for guidance" agent=coder error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" errors_count=3 flow_id=124 msg_chain_id=5057 provider=gemini subtask_id=2049 task_id=69
+time="2026-04-21T08:25:05Z" level=warning msg="got message instead of tool call" agent=reflector content="I'm having trouble generating a proper tool call response. I've attempted 3 times but each attempt failed with errors:\n\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\nno content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'\n\nI'm not sure how to proceed correctly. Should I try a different approach, or should I use one of the barrier tools to report this issue?" flow_id=124 iteration=1 msg_chain_id=5057 origin=coder provider=gemini subtask_id=2049 task_id=69
+time="2026-04-21T08:26:18Z" level=warning msg="got message instead of tool call" agent=reflector content="Tuyệt vời! Tôi đã tạo một script Python toàn diện để xử lý yêu cầu của bạn.\n\nScript này sẽ đọc các kết quả quét bảo mật từ `/tmp/all_scan_results.json`, phân tích và xếp hạng các tệp mã nguồn dựa trên mức độ nghiêm trọng của lỗ hổng, tần suất `rg` phát hiện và mức độ liên quan của tệp. Ngoài ra, nó cũng sẽ đề xuất một tệp \"callee\" liên quan cho mỗi tệp được xếp hạng cao nhất.\n\nScript đã được lưu vào cơ sở dữ liệu và sẵn sàng để bạn sử dụng.\n\n**Cách sử dụng:**\n\n1.  Lưu nội dung script sau vào một tệp, ví dụ: `/work/rank_source_files.py`.\n2.  Chạy script từ terminal:\n    ```bash\n    python3 /work/rank_source_files.py\n    ```\n3.  Kết quả đầu ra sẽ được lưu vào `/tmp/ranked_hot_files.json`.\n\n**Nội dung của script `/work/rank_source_files.py`:**\n\n```python\nimport json\nimport os\nfrom collections import def" flow_id=124 iteration=1 msg_chain_id=5057 origin=coder provider=gemini subtask_id=2049 task_id=69
+time="2026-04-21T08:27:03Z" level=error msg="terminal tool failed" error="failed to copy file: Error response from daemon: Could not find the file /work/docker-compose.dev.yml in container pentagi-terminal-124" result= tool=file
+time="2026-04-21T08:27:58Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=pentester error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5051 retry_iteration=0 subtask_id=2049 task_id=69
+time="2026-04-21T08:28:30Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=pentester error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5051 retry_iteration=1 subtask_id=2049 task_id=69
+time="2026-04-21T08:29:25Z" level=warning msg="got message instead of tool call" agent=reflector content="I have now collected and reviewed all the necessary configuration files for Subtask 2051. Here's a detailed analysis of `Dockerfile`, `docker-compose*.yml` files, and the CI/CD workflow (`.gitea/workflows/deploy.yaml`) for insecure settings:\n\n### Dockerfile Analysis\n**Observations:**\n*   **Multi-stage build:** Utilized effectively, separating build-time dependencies from the final runtime image, which is a good security practice.\n*   **Base image:** `node:20-alpine` is used. Alpine is a lightweight Linux distribution, contributing to a smaller image size and reduced attack surface.\n*   **Dependency Installation:** `npm ci` ensures reproducible builds.\n*   **Production Dependencies:** `npm prune --omit=dev` correctly removes development dependencies from the production image.\n*   **File Copying:** Selective `COPY --from=builder` in the `runner` stage minimizes the final image's content, further reducing the attack surface.\n*   **Exposed Port:** `EXPOSE 3000` is standard for Node.js appl" flow_id=124 iteration=1 msg_chain_id=5051 origin=pentester provider=gemini subtask_id=2049 task_id=69
+time="2026-04-21T08:34:21Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=installer error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5064 retry_iteration=0 subtask_id=2049 task_id=69
+time="2026-04-21T08:38:52Z" level=warning msg="got message instead of tool call" agent=reflector content="Lỗi `rg: regex parse error: error: unopened group` vẫn tồn tại, chỉ ra rằng biểu thức chính quy `RG_PATTERNS` vẫn có vấn đề về cân bằng dấu ngoặc đơn. Cụ thể, lỗi này xuất hiện ở cuối chuỗi `RG_PATTERNS`, tại phần `path\\.resolve)`.\n\nSau khi phân tích kỹ, tôi nhận thấy có một dấu ngoặc đóng thừa `)` ở cuối biểu thức `path\\.resolve)`. Mặc dù toàn bộ `RG_PATTERNS` được bao bọc trong `r'(...)'` trong script Python, tạo thành một nhóm bắt giữ bên ngoài, dấu ngoặc đóng dư thừa này vẫn gây ra lỗi cú pháp cho `rg`.\n\nĐể khắc phục, tôi sẽ sửa đổi `RG_PATTERNS` trong script `process_rg_results.py` bằng cách loại bỏ dấu ngoặc đóng thừa đó, khiến phần cuối của biểu thức trở thành `path\\.resolve`. Sau đó, tôi sẽ cập nhật tệp script và thực thi lại." flow_id=124 iteration=1 msg_chain_id=5064 origin=installer provider=gemini subtask_id=2049 task_id=69
+time="2026-04-21T08:39:45Z" level=warning msg="got message instead of tool call" agent=reflector content="Chuyên gia vận hành báo cáo lỗi cú pháp biểu thức chính quy `unopened group` trong chuỗi `RG_PATTERNS` của script Python. Tôi đã xác định lỗi là do dấu ngoặc đóng thừa ở cuối chuỗi biểu thức chính quy.\n\nTôi đã sửa lỗi bằng cách loại bỏ dấu ngoặc đóng thừa và đảm bảo rằng biểu thức chính quy được định dạng chính xác. Bây giờ tôi sẽ yêu cầu chuyên gia vận hành lưu lại script Python đã cập nhật với biểu thức chính quy đã sửa vào `/work/process_rg_results.py`." flow_id=124 iteration=1 msg_chain_id=5049 origin=primary_agent provider=gemini subtask_id=2049 task_id=69
+time="2026-04-21T08:44:32Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=installer error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5072 retry_iteration=0 subtask_id=2049 task_id=69
+time="2026-04-21T08:45:21Z" level=warning msg="agent chain call failed, will retry" agent=gemini agent_type=installer error="no content and tool calls in response: stop reason 'MALFORMED_FUNCTION_CALL'" flow_id=124 msg_chain_id=5072 retry_iteration=0 subtask_id=2049 task_id=69
+time="2026-04-21T09:04:30Z" level=warning msg="failed to exec function: tool call is repeating" agent=gemini flow_id=124 func_args="{\"action\":\"update_file\",\"content\":\"import subprocess\\nimport json\\nimport os\\n\\ndef execute_and_process_rg_scan():\\n    '''\\n    Executes an rg scan, processes its output, and integrates the results into all_scan_results.json.\\n    '''\\n\\n    RG_PATTERNS = r'child_process\\\\\\\\\\\\\\\\.exec|eval\\\\\\\\\\\\\\\\(|new Function\\\\\\\\\\\\\\\\(|execSync|spawnSync|(?:db\\\\\\\\\\\\\\\\.collection\\\\\\\\\\\\\\\\((?:.+?)\\\\\\\\\\\\\\\\)\\\\\\\\\\\\\\\\.(?:find|insert|update|delete)|sequelize\\\\\\\\\\\\\\\\.query\\\\\\\\\\\\\\\\(|\\\\\\\\\\\\\\\\.raw\\\\\\\\\\\\\\\\(|query\\\\\\\\\\\\\\\\()))|(?:innerHTML|dangerouslySetInnerHTML|document\\\\\\\\\\\\\\\\.write)|(?:http|axios|fetch)\\\\\\\\\\\\.(?:get|post|put|delete)|(?:jwt|jsonwebtoken)\\\\\\\\\\\\\\\\\\\\\\\\.verify|(?:API_KEY|SECRET_KEY|PASSWORD|PRIVATE_KEY|AUTH_TOKEN)|fs\\\\\\\\\\\\\\\\.(?:readFile|writeFile|unlink|rename|mkdir|rmdir)|req\\\\\\\\\\\\\\\\.(?:params|query|body)\\\\\\\\\\\\.(?:id|userId|tenantId|itemId|resourceId)|(?:SELECT.*?FROM.*?WHERE|INSERT INTO|UPDATE.*?SET|DELETE FROM)|res\\\\\\\\\\\\\\\\.redirect|process\\\\\\\\\\\\\\\\.env\\\\\\\\\\\\\\\\.(?:DATABASE_URL|JWT_SECRET|API_KEY)|re" func_name=file msg_chain_id=5072 subtask_id=2049 task_id=69 tool_call_id=fcall_4aa3451ceb3c63bf

@@ -18,7 +18,7 @@ import {
     Trash,
     X,
 } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -29,6 +29,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { ContextMenuItem, ContextMenuSeparator } from '@/components/ui/context-menu';
 import { DataTable } from '@/components/ui/data-table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -53,7 +54,6 @@ import {
     useDeleteApiTokenMutation,
     useUpdateApiTokenMutation,
 } from '@/graphql/types';
-import { useAdaptiveColumnVisibility } from '@/hooks/use-adaptive-column-visibility';
 import { cn } from '@/lib/utils';
 import { baseUrl } from '@/models/api';
 
@@ -65,7 +65,6 @@ interface CreateFormData {
 }
 
 interface EditFormData {
-    name: string;
     status: TokenStatusEnum;
 }
 
@@ -200,24 +199,15 @@ const SettingsAPITokens = () => {
 
     const [editingTokenId, setEditingTokenId] = useState<null | string>(null);
     const [creatingToken, setCreatingToken] = useState(false);
-    const [editFormData, setEditFormData] = useState<EditFormData>({ name: '', status: TokenStatusEnum.Active });
+    const [editFormData, setEditFormData] = useState<EditFormData>({ status: TokenStatusEnum.Active });
     const [createFormData, setCreateFormData] = useState<CreateFormData>({ expiresAt: null, name: '' });
     const [tokenSecret, setTokenSecret] = useState<null | string>(null);
     const [showTokenDialog, setShowTokenDialog] = useState(false);
     const [deleteErrorMessage, setDeleteErrorMessage] = useState<null | string>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [deletingToken, setDeletingToken] = useState<APIToken | null>(null);
-
-    const { columnVisibility, updateColumnVisibility } = useAdaptiveColumnVisibility({
-        columns: [
-            { alwaysVisible: true, id: 'name', priority: 0 },
-            { alwaysVisible: true, id: 'tokenId', priority: 0 },
-            { id: 'status', priority: 1 },
-            { id: 'createdAt', priority: 2 },
-            { id: 'expires', priority: 3 },
-        ],
-        tableKey: 'api-tokens',
-    });
+    const editingInputRef = useRef<HTMLInputElement>(null);
+    const creatingInputRef = useRef<HTMLInputElement>(null);
 
     // Get current page from URL
     const currentPage = useMemo(() => {
@@ -283,24 +273,25 @@ const SettingsAPITokens = () => {
     const handleEdit = useCallback((token: APIToken) => {
         setEditingTokenId(token.tokenId);
         setEditFormData({
-            name: token.name || '',
             status: token.status,
         });
     }, []);
 
     const handleCancelEdit = useCallback(() => {
         setEditingTokenId(null);
-        setEditFormData({ name: '', status: TokenStatusEnum.Active });
+        setEditFormData({ status: TokenStatusEnum.Active });
     }, []);
 
     const handleSave = useCallback(
         async (tokenId: string) => {
+            const name = editingInputRef.current?.value.trim() || null;
+
             try {
                 await updateAPIToken({
                     refetchQueries: ['apiTokens'],
                     variables: {
                         input: {
-                            name: editFormData.name || null,
+                            name,
                             status: editFormData.status,
                         },
                         tokenId,
@@ -308,12 +299,12 @@ const SettingsAPITokens = () => {
                 });
 
                 setEditingTokenId(null);
-                setEditFormData({ name: '', status: TokenStatusEnum.Active });
+                setEditFormData({ status: TokenStatusEnum.Active });
             } catch (error) {
                 console.error('Failed to update token:', error);
             }
         },
-        [editFormData, updateAPIToken],
+        [editFormData.status, updateAPIToken],
     );
 
     const handleCreateNew = useCallback(() => {
@@ -331,13 +322,15 @@ const SettingsAPITokens = () => {
             return;
         }
 
+        const name = creatingInputRef.current?.value.trim() || null;
+
         try {
             const ttl = calculateTTL(createFormData.expiresAt);
             const result = await createAPIToken({
                 refetchQueries: ['apiTokens'],
                 variables: {
                     input: {
-                        name: createFormData.name || null,
+                        name,
                         ttl,
                     },
                 },
@@ -353,7 +346,7 @@ const SettingsAPITokens = () => {
         } catch (error) {
             console.error('Failed to create token:', error);
         }
-    }, [createAPIToken, createFormData]);
+    }, [createAPIToken, createFormData.expiresAt]);
 
     const handleDeleteDialogOpen = useCallback((token: APIToken) => {
         setDeletingToken(token);
@@ -409,23 +402,25 @@ const SettingsAPITokens = () => {
                             <Input
                                 autoFocus
                                 className="h-8"
+                                defaultValue=""
                                 key="create-name-input"
-                                onChange={(e) => setCreateFormData((prev) => ({ ...prev, name: e.target.value }))}
                                 placeholder="Token name (optional)"
-                                value={createFormData.name}
+                                ref={creatingInputRef}
                             />
                         );
                     }
 
                     if (isEditing) {
+                        const tokenName = token.name || '';
+
                         return (
                             <Input
                                 autoFocus
                                 className="h-8"
+                                defaultValue={tokenName}
                                 key={`edit-name-input-${token.tokenId}`}
-                                onChange={(e) => setEditFormData((prev) => ({ ...prev, name: e.target.value }))}
                                 placeholder="Token name (optional)"
-                                value={editFormData.name}
+                                ref={editingInputRef}
                             />
                         );
                     }
@@ -803,14 +798,13 @@ const SettingsAPITokens = () => {
                 enableHiding: false,
                 header: () => null,
                 id: 'actions',
+                meta: { preventRowClick: true },
                 size: 48,
             },
         ],
         [
             createFormData.expiresAt,
-            createFormData.name,
             deletingToken,
-            editFormData.name,
             editFormData.status,
             editingTokenId,
             handleCancelCreate,
@@ -825,6 +819,36 @@ const SettingsAPITokens = () => {
             isDeleteLoading,
             isUpdateLoading,
         ],
+    );
+
+    const renderRowContextMenu = useCallback(
+        (token: APIToken) => {
+            if (token.id === 'create-new') {
+                return null;
+            }
+
+            return (
+                <>
+                    <ContextMenuItem onClick={() => handleEdit(token)}>
+                        <Pencil />
+                        Edit
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={() => handleCopyTokenId(token.tokenId)}>
+                        <Copy />
+                        Copy Token ID
+                    </ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem
+                        disabled={isDeleteLoading && deletingToken?.tokenId === token.tokenId}
+                        onClick={() => handleDeleteDialogOpen(token)}
+                    >
+                        <Trash />
+                        {isDeleteLoading && deletingToken?.tokenId === token.tokenId ? 'Deleting...' : 'Delete'}
+                    </ContextMenuItem>
+                </>
+            );
+        },
+        [deletingToken, handleCopyTokenId, handleDeleteDialogOpen, handleEdit, isDeleteLoading],
     );
 
     if (isLoading) {
@@ -893,20 +917,12 @@ const SettingsAPITokens = () => {
 
             <DataTable<APIToken>
                 columns={columns}
-                columnVisibility={columnVisibility}
                 data={creatingToken ? [createNewTokenPlaceholder, ...tokens] : tokens}
                 filterColumn="name"
                 filterPlaceholder="Filter token names..."
-                onColumnVisibilityChange={(visibility) => {
-                    Object.entries(visibility).forEach(([columnId, isVisible]) => {
-                        if (columnVisibility[columnId] !== isVisible) {
-                            updateColumnVisibility(columnId, isVisible);
-                        }
-                    });
-                }}
                 onPageChange={handlePageChange}
                 pageIndex={currentPage}
-                tableKey="api-tokens"
+                renderRowContextMenu={renderRowContextMenu}
             />
 
             <Dialog

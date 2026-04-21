@@ -216,6 +216,11 @@ export type CreateApiTokenInput = {
     ttl: Scalars['Int']['input'];
 };
 
+export type CreateFlowTemplateInput = {
+    text: Scalars['String']['input'];
+    title: Scalars['String']['input'];
+};
+
 export type DailyFlowsStats = {
     date: Scalars['Time']['output'];
     stats: FlowsStats;
@@ -283,6 +288,15 @@ export type FlowStats = {
     totalAssistantsCount: Scalars['Int']['output'];
     totalSubtasksCount: Scalars['Int']['output'];
     totalTasksCount: Scalars['Int']['output'];
+};
+
+export type FlowTemplate = {
+    createdAt: Scalars['Time']['output'];
+    id: Scalars['ID']['output'];
+    text: Scalars['String']['output'];
+    title: Scalars['String']['output'];
+    updatedAt: Scalars['Time']['output'];
+    userId: Scalars['ID']['output'];
 };
 
 export type FlowsStats = {
@@ -361,12 +375,14 @@ export type Mutation = {
     createAPIToken: ApiTokenWithSecret;
     createAssistant: FlowAssistant;
     createFlow: Flow;
+    createFlowTemplate: FlowTemplate;
     createPrompt: UserPrompt;
     createProvider: ProviderConfig;
     deleteAPIToken: Scalars['Boolean']['output'];
     deleteAssistant: ResultType;
     deleteFavoriteFlow: ResultType;
     deleteFlow: ResultType;
+    deleteFlowTemplate: ResultType;
     deletePrompt: ResultType;
     deleteProvider: ResultType;
     finishFlow: ResultType;
@@ -377,6 +393,7 @@ export type Mutation = {
     testAgent: AgentTestResult;
     testProvider: ProviderTestResult;
     updateAPIToken: ApiToken;
+    updateFlowTemplate: FlowTemplate;
     updatePrompt: UserPrompt;
     updateProvider: ProviderConfig;
     validatePrompt: PromptValidationResult;
@@ -409,6 +426,10 @@ export type MutationCreateFlowArgs = {
     modelProvider: Scalars['String']['input'];
 };
 
+export type MutationCreateFlowTemplateArgs = {
+    input: CreateFlowTemplateInput;
+};
+
 export type MutationCreatePromptArgs = {
     template: Scalars['String']['input'];
     type: PromptType;
@@ -437,6 +458,10 @@ export type MutationDeleteFlowArgs = {
     flowId: Scalars['ID']['input'];
 };
 
+export type MutationDeleteFlowTemplateArgs = {
+    templateId: Scalars['ID']['input'];
+};
+
 export type MutationDeletePromptArgs = {
     promptId: Scalars['ID']['input'];
 };
@@ -452,6 +477,7 @@ export type MutationFinishFlowArgs = {
 export type MutationPutUserInputArgs = {
     flowId: Scalars['ID']['input'];
     input: Scalars['String']['input'];
+    modelProvider?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationRenameFlowArgs = {
@@ -482,6 +508,11 @@ export type MutationTestProviderArgs = {
 export type MutationUpdateApiTokenArgs = {
     input: UpdateApiTokenInput;
     tokenId: Scalars['String']['input'];
+};
+
+export type MutationUpdateFlowTemplateArgs = {
+    input: UpdateFlowTemplateInput;
+    templateId: Scalars['ID']['input'];
 };
 
 export type MutationUpdatePromptArgs = {
@@ -653,6 +684,8 @@ export type Query = {
     assistants?: Maybe<Array<Assistant>>;
     flow: Flow;
     flowStatsByFlow: FlowStats;
+    flowTemplate?: Maybe<FlowTemplate>;
+    flowTemplates: Array<FlowTemplate>;
     flows?: Maybe<Array<Flow>>;
     flowsExecutionStatsByPeriod: Array<FlowExecutionStats>;
     flowsStatsByPeriod: Array<DailyFlowsStats>;
@@ -705,6 +738,10 @@ export type QueryFlowArgs = {
 
 export type QueryFlowStatsByFlowArgs = {
     flowId: Scalars['ID']['input'];
+};
+
+export type QueryFlowTemplateArgs = {
+    templateId: Scalars['ID']['input'];
 };
 
 export type QueryFlowsExecutionStatsByPeriodArgs = {
@@ -840,6 +877,9 @@ export type Subscription = {
     assistantUpdated: Assistant;
     flowCreated: Flow;
     flowDeleted: Flow;
+    flowTemplateCreated: FlowTemplate;
+    flowTemplateDeleted: FlowTemplate;
+    flowTemplateUpdated: FlowTemplate;
     flowUpdated: Flow;
     messageLogAdded: MessageLog;
     messageLogUpdated: MessageLog;
@@ -1019,6 +1059,11 @@ export type ToolsPrompts = {
 export type UpdateApiTokenInput = {
     name?: InputMaybe<Scalars['String']['input']>;
     status?: InputMaybe<TokenStatus>;
+};
+
+export type UpdateFlowTemplateInput = {
+    text: Scalars['String']['input'];
+    title: Scalars['String']['input'];
 };
 
 export type UsageStats = {
@@ -1330,6 +1375,15 @@ export type ApiTokenWithSecretFragmentFragment = {
     createdAt: any;
     updatedAt: any;
     token: string;
+};
+
+export type FlowTemplateFragmentFragment = {
+    id: string;
+    userId: string;
+    title: string;
+    text: string;
+    createdAt: any;
+    updatedAt: any;
 };
 
 export type UsageStatsFragmentFragment = {
@@ -1653,6 +1707,35 @@ export type DeleteFavoriteFlowMutationVariables = Exact<{
 
 export type DeleteFavoriteFlowMutation = { deleteFavoriteFlow: ResultType };
 
+export type FlowTemplatesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FlowTemplatesQuery = { flowTemplates: Array<FlowTemplateFragmentFragment> };
+
+export type FlowTemplateQueryVariables = Exact<{
+    templateId: Scalars['ID']['input'];
+}>;
+
+export type FlowTemplateQuery = { flowTemplate?: FlowTemplateFragmentFragment | null };
+
+export type CreateFlowTemplateMutationVariables = Exact<{
+    input: CreateFlowTemplateInput;
+}>;
+
+export type CreateFlowTemplateMutation = { createFlowTemplate: FlowTemplateFragmentFragment };
+
+export type UpdateFlowTemplateMutationVariables = Exact<{
+    templateId: Scalars['ID']['input'];
+    input: UpdateFlowTemplateInput;
+}>;
+
+export type UpdateFlowTemplateMutation = { updateFlowTemplate: FlowTemplateFragmentFragment };
+
+export type DeleteFlowTemplateMutationVariables = Exact<{
+    templateId: Scalars['ID']['input'];
+}>;
+
+export type DeleteFlowTemplateMutation = { deleteFlowTemplate: ResultType };
+
 export type CreateFlowMutationVariables = Exact<{
     modelProvider: Scalars['String']['input'];
     input: Scalars['String']['input'];
@@ -1669,6 +1752,7 @@ export type DeleteFlowMutation = { deleteFlow: ResultType };
 export type PutUserInputMutationVariables = Exact<{
     flowId: Scalars['ID']['input'];
     input: Scalars['String']['input'];
+    modelProvider?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 export type PutUserInputMutation = { putUserInput: ResultType };
@@ -1941,6 +2025,18 @@ export type SettingsUserUpdatedSubscriptionVariables = Exact<{ [key: string]: ne
 
 export type SettingsUserUpdatedSubscription = { settingsUserUpdated: UserPreferencesFragmentFragment };
 
+export type FlowTemplateCreatedSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type FlowTemplateCreatedSubscription = { flowTemplateCreated: FlowTemplateFragmentFragment };
+
+export type FlowTemplateUpdatedSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type FlowTemplateUpdatedSubscription = { flowTemplateUpdated: FlowTemplateFragmentFragment };
+
+export type FlowTemplateDeletedSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type FlowTemplateDeletedSubscription = { flowTemplateDeleted: FlowTemplateFragmentFragment };
+
 export const SettingsFragmentFragmentDoc = gql`
     fragment settingsFragment on Settings {
         debug
@@ -1979,6 +2075,8 @@ export const FlowFragmentFragmentDoc = gql`
         createdAt
         updatedAt
     }
+    ${TerminalFragmentFragmentDoc}
+    ${ProviderFragmentFragmentDoc}
 `;
 export const SubtaskFragmentFragmentDoc = gql`
     fragment subtaskFragment on Subtask {
@@ -2006,6 +2104,7 @@ export const TaskFragmentFragmentDoc = gql`
         createdAt
         updatedAt
     }
+    ${SubtaskFragmentFragmentDoc}
 `;
 export const TerminalLogFragmentFragmentDoc = gql`
     fragment terminalLogFragment on TerminalLog {
@@ -2099,6 +2198,7 @@ export const AssistantFragmentFragmentDoc = gql`
         createdAt
         updatedAt
     }
+    ${ProviderFragmentFragmentDoc}
 `;
 export const AssistantLogFragmentFragmentDoc = gql`
     fragment assistantLogFragment on AssistantLog {
@@ -2131,6 +2231,7 @@ export const AgentTestResultFragmentFragmentDoc = gql`
             ...testResultFragment
         }
     }
+    ${TestResultFragmentFragmentDoc}
 `;
 export const ProviderTestResultFragmentFragmentDoc = gql`
     fragment providerTestResultFragment on ProviderTestResult {
@@ -2174,6 +2275,7 @@ export const ProviderTestResultFragmentFragmentDoc = gql`
             ...agentTestResultFragment
         }
     }
+    ${AgentTestResultFragmentFragmentDoc}
 `;
 export const ModelConfigFragmentFragmentDoc = gql`
     fragment modelConfigFragment on ModelConfig {
@@ -2252,6 +2354,7 @@ export const AgentsConfigFragmentFragmentDoc = gql`
             ...agentConfigFragment
         }
     }
+    ${AgentConfigFragmentFragmentDoc}
 `;
 export const ProviderConfigFragmentFragmentDoc = gql`
     fragment providerConfigFragment on ProviderConfig {
@@ -2264,6 +2367,7 @@ export const ProviderConfigFragmentFragmentDoc = gql`
         createdAt
         updatedAt
     }
+    ${AgentsConfigFragmentFragmentDoc}
 `;
 export const UserPromptFragmentFragmentDoc = gql`
     fragment userPromptFragment on UserPrompt {
@@ -2317,6 +2421,16 @@ export const ApiTokenWithSecretFragmentFragmentDoc = gql`
         token
     }
 `;
+export const FlowTemplateFragmentFragmentDoc = gql`
+    fragment flowTemplateFragment on FlowTemplate {
+        id
+        userId
+        title
+        text
+        createdAt
+        updatedAt
+    }
+`;
 export const UsageStatsFragmentFragmentDoc = gql`
     fragment usageStatsFragment on UsageStats {
         totalUsageIn
@@ -2334,6 +2448,7 @@ export const DailyUsageStatsFragmentFragmentDoc = gql`
             ...usageStatsFragment
         }
     }
+    ${UsageStatsFragmentFragmentDoc}
 `;
 export const ProviderUsageStatsFragmentFragmentDoc = gql`
     fragment providerUsageStatsFragment on ProviderUsageStats {
@@ -2342,6 +2457,7 @@ export const ProviderUsageStatsFragmentFragmentDoc = gql`
             ...usageStatsFragment
         }
     }
+    ${UsageStatsFragmentFragmentDoc}
 `;
 export const ModelUsageStatsFragmentFragmentDoc = gql`
     fragment modelUsageStatsFragment on ModelUsageStats {
@@ -2351,6 +2467,7 @@ export const ModelUsageStatsFragmentFragmentDoc = gql`
             ...usageStatsFragment
         }
     }
+    ${UsageStatsFragmentFragmentDoc}
 `;
 export const AgentTypeUsageStatsFragmentFragmentDoc = gql`
     fragment agentTypeUsageStatsFragment on AgentTypeUsageStats {
@@ -2359,6 +2476,7 @@ export const AgentTypeUsageStatsFragmentFragmentDoc = gql`
             ...usageStatsFragment
         }
     }
+    ${UsageStatsFragmentFragmentDoc}
 `;
 export const ToolcallsStatsFragmentFragmentDoc = gql`
     fragment toolcallsStatsFragment on ToolcallsStats {
@@ -2373,6 +2491,7 @@ export const DailyToolcallsStatsFragmentFragmentDoc = gql`
             ...toolcallsStatsFragment
         }
     }
+    ${ToolcallsStatsFragmentFragmentDoc}
 `;
 export const FunctionToolcallsStatsFragmentFragmentDoc = gql`
     fragment functionToolcallsStatsFragment on FunctionToolcallsStats {
@@ -2405,6 +2524,7 @@ export const DailyFlowsStatsFragmentFragmentDoc = gql`
             ...flowsStatsFragment
         }
     }
+    ${FlowsStatsFragmentFragmentDoc}
 `;
 export const SubtaskExecutionStatsFragmentFragmentDoc = gql`
     fragment subtaskExecutionStatsFragment on SubtaskExecutionStats {
@@ -2424,6 +2544,7 @@ export const TaskExecutionStatsFragmentFragmentDoc = gql`
             ...subtaskExecutionStatsFragment
         }
     }
+    ${SubtaskExecutionStatsFragmentFragmentDoc}
 `;
 export const FlowExecutionStatsFragmentFragmentDoc = gql`
     fragment flowExecutionStatsFragment on FlowExecutionStats {
@@ -2436,6 +2557,7 @@ export const FlowExecutionStatsFragmentFragmentDoc = gql`
             ...taskExecutionStatsFragment
         }
     }
+    ${TaskExecutionStatsFragmentFragmentDoc}
 `;
 export const UserPreferencesFragmentFragmentDoc = gql`
     fragment userPreferencesFragment on UserPreferences {
@@ -2450,8 +2572,6 @@ export const FlowsDocument = gql`
         }
     }
     ${FlowFragmentFragmentDoc}
-    ${TerminalFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 
 /**
@@ -2477,6 +2597,13 @@ export function useFlowsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Flow
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<FlowsQuery, FlowsQueryVariables>(FlowsDocument, options);
 }
+// @ts-ignore
+export function useFlowsSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<FlowsQuery, FlowsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowsQuery, FlowsQueryVariables>;
+export function useFlowsSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowsQuery, FlowsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowsQuery | undefined, FlowsQueryVariables>;
 export function useFlowsSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowsQuery, FlowsQueryVariables>,
 ) {
@@ -2521,6 +2648,13 @@ export function useProvidersLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<ProvidersQuery, ProvidersQueryVariables>(ProvidersDocument, options);
 }
+// @ts-ignore
+export function useProvidersSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<ProvidersQuery, ProvidersQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ProvidersQuery, ProvidersQueryVariables>;
+export function useProvidersSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProvidersQuery, ProvidersQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ProvidersQuery | undefined, ProvidersQueryVariables>;
 export function useProvidersSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProvidersQuery, ProvidersQueryVariables>,
 ) {
@@ -2563,6 +2697,13 @@ export function useSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<S
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<SettingsQuery, SettingsQueryVariables>(SettingsDocument, options);
 }
+// @ts-ignore
+export function useSettingsSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<SettingsQuery, SettingsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<SettingsQuery, SettingsQueryVariables>;
+export function useSettingsSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SettingsQuery, SettingsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<SettingsQuery | undefined, SettingsQueryVariables>;
 export function useSettingsSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SettingsQuery, SettingsQueryVariables>,
 ) {
@@ -2658,8 +2799,6 @@ export const SettingsProvidersDocument = gql`
         }
     }
     ${ProviderConfigFragmentFragmentDoc}
-    ${AgentsConfigFragmentFragmentDoc}
-    ${AgentConfigFragmentFragmentDoc}
     ${ModelConfigFragmentFragmentDoc}
 `;
 
@@ -2693,6 +2832,15 @@ export function useSettingsProvidersLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useSettingsProvidersSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<SettingsProvidersQuery, SettingsProvidersQueryVariables>,
+): Apollo.UseSuspenseQueryResult<SettingsProvidersQuery, SettingsProvidersQueryVariables>;
+export function useSettingsProvidersSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<SettingsProvidersQuery, SettingsProvidersQueryVariables>,
+): Apollo.UseSuspenseQueryResult<SettingsProvidersQuery | undefined, SettingsProvidersQueryVariables>;
 export function useSettingsProvidersSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -2900,6 +3048,15 @@ export function useSettingsPromptsLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<SettingsPromptsQuery, SettingsPromptsQueryVariables>(SettingsPromptsDocument, options);
 }
+// @ts-ignore
+export function useSettingsPromptsSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<SettingsPromptsQuery, SettingsPromptsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<SettingsPromptsQuery, SettingsPromptsQueryVariables>;
+export function useSettingsPromptsSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<SettingsPromptsQuery, SettingsPromptsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<SettingsPromptsQuery | undefined, SettingsPromptsQueryVariables>;
 export function useSettingsPromptsSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -2943,10 +3100,7 @@ export const FlowDocument = gql`
         }
     }
     ${FlowFragmentFragmentDoc}
-    ${TerminalFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
     ${TaskFragmentFragmentDoc}
-    ${SubtaskFragmentFragmentDoc}
     ${ScreenshotFragmentFragmentDoc}
     ${TerminalLogFragmentFragmentDoc}
     ${MessageLogFragmentFragmentDoc}
@@ -2982,6 +3136,13 @@ export function useFlowLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FlowQ
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<FlowQuery, FlowQueryVariables>(FlowDocument, options);
 }
+// @ts-ignore
+export function useFlowSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<FlowQuery, FlowQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowQuery, FlowQueryVariables>;
+export function useFlowSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowQuery, FlowQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowQuery | undefined, FlowQueryVariables>;
 export function useFlowSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowQuery, FlowQueryVariables>,
 ) {
@@ -2999,7 +3160,6 @@ export const TasksDocument = gql`
         }
     }
     ${TaskFragmentFragmentDoc}
-    ${SubtaskFragmentFragmentDoc}
 `;
 
 /**
@@ -3029,6 +3189,13 @@ export function useTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Task
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<TasksQuery, TasksQueryVariables>(TasksDocument, options);
 }
+// @ts-ignore
+export function useTasksSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<TasksQuery, TasksQueryVariables>,
+): Apollo.UseSuspenseQueryResult<TasksQuery, TasksQueryVariables>;
+export function useTasksSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TasksQuery, TasksQueryVariables>,
+): Apollo.UseSuspenseQueryResult<TasksQuery | undefined, TasksQueryVariables>;
 export function useTasksSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TasksQuery, TasksQueryVariables>,
 ) {
@@ -3046,7 +3213,6 @@ export const AssistantsDocument = gql`
         }
     }
     ${AssistantFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 
 /**
@@ -3078,6 +3244,13 @@ export function useAssistantsLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<AssistantsQuery, AssistantsQueryVariables>(AssistantsDocument, options);
 }
+// @ts-ignore
+export function useAssistantsSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<AssistantsQuery, AssistantsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<AssistantsQuery, AssistantsQueryVariables>;
+export function useAssistantsSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AssistantsQuery, AssistantsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<AssistantsQuery | undefined, AssistantsQueryVariables>;
 export function useAssistantsSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AssistantsQuery, AssistantsQueryVariables>,
 ) {
@@ -3127,6 +3300,13 @@ export function useAssistantLogsLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<AssistantLogsQuery, AssistantLogsQueryVariables>(AssistantLogsDocument, options);
 }
+// @ts-ignore
+export function useAssistantLogsSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<AssistantLogsQuery, AssistantLogsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<AssistantLogsQuery, AssistantLogsQueryVariables>;
+export function useAssistantLogsSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AssistantLogsQuery, AssistantLogsQueryVariables>,
+): Apollo.UseSuspenseQueryResult<AssistantLogsQuery | undefined, AssistantLogsQueryVariables>;
 export function useAssistantLogsSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AssistantLogsQuery, AssistantLogsQueryVariables>,
 ) {
@@ -3147,10 +3327,7 @@ export const FlowReportDocument = gql`
         }
     }
     ${FlowFragmentFragmentDoc}
-    ${TerminalFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
     ${TaskFragmentFragmentDoc}
-    ${SubtaskFragmentFragmentDoc}
 `;
 
 /**
@@ -3182,6 +3359,13 @@ export function useFlowReportLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<FlowReportQuery, FlowReportQueryVariables>(FlowReportDocument, options);
 }
+// @ts-ignore
+export function useFlowReportSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<FlowReportQuery, FlowReportQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowReportQuery, FlowReportQueryVariables>;
+export function useFlowReportSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowReportQuery, FlowReportQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowReportQuery | undefined, FlowReportQueryVariables>;
 export function useFlowReportSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowReportQuery, FlowReportQueryVariables>,
 ) {
@@ -3228,6 +3412,15 @@ export function useUsageStatsTotalLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<UsageStatsTotalQuery, UsageStatsTotalQueryVariables>(UsageStatsTotalDocument, options);
 }
+// @ts-ignore
+export function useUsageStatsTotalSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<UsageStatsTotalQuery, UsageStatsTotalQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsTotalQuery, UsageStatsTotalQueryVariables>;
+export function useUsageStatsTotalSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<UsageStatsTotalQuery, UsageStatsTotalQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsTotalQuery | undefined, UsageStatsTotalQueryVariables>;
 export function useUsageStatsTotalSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3250,7 +3443,6 @@ export const UsageStatsByPeriodDocument = gql`
         }
     }
     ${DailyUsageStatsFragmentFragmentDoc}
-    ${UsageStatsFragmentFragmentDoc}
 `;
 
 /**
@@ -3288,6 +3480,15 @@ export function useUsageStatsByPeriodLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useUsageStatsByPeriodSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<UsageStatsByPeriodQuery, UsageStatsByPeriodQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByPeriodQuery, UsageStatsByPeriodQueryVariables>;
+export function useUsageStatsByPeriodSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<UsageStatsByPeriodQuery, UsageStatsByPeriodQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByPeriodQuery | undefined, UsageStatsByPeriodQueryVariables>;
 export function useUsageStatsByPeriodSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3313,7 +3514,6 @@ export const UsageStatsByProviderDocument = gql`
         }
     }
     ${ProviderUsageStatsFragmentFragmentDoc}
-    ${UsageStatsFragmentFragmentDoc}
 `;
 
 /**
@@ -3349,6 +3549,15 @@ export function useUsageStatsByProviderLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useUsageStatsByProviderSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<UsageStatsByProviderQuery, UsageStatsByProviderQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByProviderQuery, UsageStatsByProviderQueryVariables>;
+export function useUsageStatsByProviderSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<UsageStatsByProviderQuery, UsageStatsByProviderQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByProviderQuery | undefined, UsageStatsByProviderQueryVariables>;
 export function useUsageStatsByProviderSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3374,7 +3583,6 @@ export const UsageStatsByModelDocument = gql`
         }
     }
     ${ModelUsageStatsFragmentFragmentDoc}
-    ${UsageStatsFragmentFragmentDoc}
 `;
 
 /**
@@ -3407,6 +3615,15 @@ export function useUsageStatsByModelLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useUsageStatsByModelSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<UsageStatsByModelQuery, UsageStatsByModelQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByModelQuery, UsageStatsByModelQueryVariables>;
+export function useUsageStatsByModelSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<UsageStatsByModelQuery, UsageStatsByModelQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByModelQuery | undefined, UsageStatsByModelQueryVariables>;
 export function useUsageStatsByModelSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3429,7 +3646,6 @@ export const UsageStatsByAgentTypeDocument = gql`
         }
     }
     ${AgentTypeUsageStatsFragmentFragmentDoc}
-    ${UsageStatsFragmentFragmentDoc}
 `;
 
 /**
@@ -3465,6 +3681,15 @@ export function useUsageStatsByAgentTypeLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useUsageStatsByAgentTypeSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<UsageStatsByAgentTypeQuery, UsageStatsByAgentTypeQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByAgentTypeQuery, UsageStatsByAgentTypeQueryVariables>;
+export function useUsageStatsByAgentTypeSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<UsageStatsByAgentTypeQuery, UsageStatsByAgentTypeQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByAgentTypeQuery | undefined, UsageStatsByAgentTypeQueryVariables>;
 export function useUsageStatsByAgentTypeSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3524,6 +3749,15 @@ export function useUsageStatsByFlowLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useUsageStatsByFlowSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<UsageStatsByFlowQuery, UsageStatsByFlowQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByFlowQuery, UsageStatsByFlowQueryVariables>;
+export function useUsageStatsByFlowSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<UsageStatsByFlowQuery, UsageStatsByFlowQueryVariables>,
+): Apollo.UseSuspenseQueryResult<UsageStatsByFlowQuery | undefined, UsageStatsByFlowQueryVariables>;
 export function useUsageStatsByFlowSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3546,7 +3780,6 @@ export const UsageStatsByAgentTypeForFlowDocument = gql`
         }
     }
     ${AgentTypeUsageStatsFragmentFragmentDoc}
-    ${UsageStatsFragmentFragmentDoc}
 `;
 
 /**
@@ -3590,6 +3823,24 @@ export function useUsageStatsByAgentTypeForFlowLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useUsageStatsByAgentTypeForFlowSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        UsageStatsByAgentTypeForFlowQuery,
+        UsageStatsByAgentTypeForFlowQueryVariables
+    >,
+): Apollo.UseSuspenseQueryResult<UsageStatsByAgentTypeForFlowQuery, UsageStatsByAgentTypeForFlowQueryVariables>;
+export function useUsageStatsByAgentTypeForFlowSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<
+              UsageStatsByAgentTypeForFlowQuery,
+              UsageStatsByAgentTypeForFlowQueryVariables
+          >,
+): Apollo.UseSuspenseQueryResult<
+    UsageStatsByAgentTypeForFlowQuery | undefined,
+    UsageStatsByAgentTypeForFlowQueryVariables
+>;
 export function useUsageStatsByAgentTypeForFlowSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3657,6 +3908,15 @@ export function useToolcallsStatsTotalLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useToolcallsStatsTotalSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<ToolcallsStatsTotalQuery, ToolcallsStatsTotalQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsTotalQuery, ToolcallsStatsTotalQueryVariables>;
+export function useToolcallsStatsTotalSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<ToolcallsStatsTotalQuery, ToolcallsStatsTotalQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsTotalQuery | undefined, ToolcallsStatsTotalQueryVariables>;
 export function useToolcallsStatsTotalSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3682,7 +3942,6 @@ export const ToolcallsStatsByPeriodDocument = gql`
         }
     }
     ${DailyToolcallsStatsFragmentFragmentDoc}
-    ${ToolcallsStatsFragmentFragmentDoc}
 `;
 
 /**
@@ -3720,6 +3979,15 @@ export function useToolcallsStatsByPeriodLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useToolcallsStatsByPeriodSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<ToolcallsStatsByPeriodQuery, ToolcallsStatsByPeriodQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsByPeriodQuery, ToolcallsStatsByPeriodQueryVariables>;
+export function useToolcallsStatsByPeriodSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<ToolcallsStatsByPeriodQuery, ToolcallsStatsByPeriodQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsByPeriodQuery | undefined, ToolcallsStatsByPeriodQueryVariables>;
 export function useToolcallsStatsByPeriodSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3780,6 +4048,18 @@ export function useToolcallsStatsByFunctionLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useToolcallsStatsByFunctionSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        ToolcallsStatsByFunctionQuery,
+        ToolcallsStatsByFunctionQueryVariables
+    >,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsByFunctionQuery, ToolcallsStatsByFunctionQueryVariables>;
+export function useToolcallsStatsByFunctionSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<ToolcallsStatsByFunctionQuery, ToolcallsStatsByFunctionQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsByFunctionQuery | undefined, ToolcallsStatsByFunctionQueryVariables>;
 export function useToolcallsStatsByFunctionSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3844,6 +4124,15 @@ export function useToolcallsStatsByFlowLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useToolcallsStatsByFlowSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<ToolcallsStatsByFlowQuery, ToolcallsStatsByFlowQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsByFlowQuery, ToolcallsStatsByFlowQueryVariables>;
+export function useToolcallsStatsByFlowSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<ToolcallsStatsByFlowQuery, ToolcallsStatsByFlowQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsByFlowQuery | undefined, ToolcallsStatsByFlowQueryVariables>;
 export function useToolcallsStatsByFlowSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3912,6 +4201,24 @@ export function useToolcallsStatsByFunctionForFlowLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useToolcallsStatsByFunctionForFlowSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        ToolcallsStatsByFunctionForFlowQuery,
+        ToolcallsStatsByFunctionForFlowQueryVariables
+    >,
+): Apollo.UseSuspenseQueryResult<ToolcallsStatsByFunctionForFlowQuery, ToolcallsStatsByFunctionForFlowQueryVariables>;
+export function useToolcallsStatsByFunctionForFlowSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<
+              ToolcallsStatsByFunctionForFlowQuery,
+              ToolcallsStatsByFunctionForFlowQueryVariables
+          >,
+): Apollo.UseSuspenseQueryResult<
+    ToolcallsStatsByFunctionForFlowQuery | undefined,
+    ToolcallsStatsByFunctionForFlowQueryVariables
+>;
 export function useToolcallsStatsByFunctionForFlowSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3973,6 +4280,15 @@ export function useFlowsStatsTotalLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<FlowsStatsTotalQuery, FlowsStatsTotalQueryVariables>(FlowsStatsTotalDocument, options);
 }
+// @ts-ignore
+export function useFlowsStatsTotalSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<FlowsStatsTotalQuery, FlowsStatsTotalQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowsStatsTotalQuery, FlowsStatsTotalQueryVariables>;
+export function useFlowsStatsTotalSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<FlowsStatsTotalQuery, FlowsStatsTotalQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowsStatsTotalQuery | undefined, FlowsStatsTotalQueryVariables>;
 export function useFlowsStatsTotalSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -3995,7 +4311,6 @@ export const FlowsStatsByPeriodDocument = gql`
         }
     }
     ${DailyFlowsStatsFragmentFragmentDoc}
-    ${FlowsStatsFragmentFragmentDoc}
 `;
 
 /**
@@ -4033,6 +4348,15 @@ export function useFlowsStatsByPeriodLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useFlowsStatsByPeriodSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<FlowsStatsByPeriodQuery, FlowsStatsByPeriodQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowsStatsByPeriodQuery, FlowsStatsByPeriodQueryVariables>;
+export function useFlowsStatsByPeriodSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<FlowsStatsByPeriodQuery, FlowsStatsByPeriodQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowsStatsByPeriodQuery | undefined, FlowsStatsByPeriodQueryVariables>;
 export function useFlowsStatsByPeriodSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -4089,6 +4413,15 @@ export function useFlowStatsByFlowLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<FlowStatsByFlowQuery, FlowStatsByFlowQueryVariables>(FlowStatsByFlowDocument, options);
 }
+// @ts-ignore
+export function useFlowStatsByFlowSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<FlowStatsByFlowQuery, FlowStatsByFlowQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowStatsByFlowQuery, FlowStatsByFlowQueryVariables>;
+export function useFlowStatsByFlowSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<FlowStatsByFlowQuery, FlowStatsByFlowQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowStatsByFlowQuery | undefined, FlowStatsByFlowQueryVariables>;
 export function useFlowStatsByFlowSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -4111,8 +4444,6 @@ export const FlowsExecutionStatsByPeriodDocument = gql`
         }
     }
     ${FlowExecutionStatsFragmentFragmentDoc}
-    ${TaskExecutionStatsFragmentFragmentDoc}
-    ${SubtaskExecutionStatsFragmentFragmentDoc}
 `;
 
 /**
@@ -4153,6 +4484,21 @@ export function useFlowsExecutionStatsByPeriodLazyQuery(
         options,
     );
 }
+// @ts-ignore
+export function useFlowsExecutionStatsByPeriodSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        FlowsExecutionStatsByPeriodQuery,
+        FlowsExecutionStatsByPeriodQueryVariables
+    >,
+): Apollo.UseSuspenseQueryResult<FlowsExecutionStatsByPeriodQuery, FlowsExecutionStatsByPeriodQueryVariables>;
+export function useFlowsExecutionStatsByPeriodSuspenseQuery(
+    baseOptions?:
+        | Apollo.SkipToken
+        | Apollo.SuspenseQueryHookOptions<FlowsExecutionStatsByPeriodQuery, FlowsExecutionStatsByPeriodQueryVariables>,
+): Apollo.UseSuspenseQueryResult<
+    FlowsExecutionStatsByPeriodQuery | undefined,
+    FlowsExecutionStatsByPeriodQueryVariables
+>;
 export function useFlowsExecutionStatsByPeriodSuspenseQuery(
     baseOptions?:
         | Apollo.SkipToken
@@ -4207,6 +4553,13 @@ export function useApiTokensLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<ApiTokensQuery, ApiTokensQueryVariables>(ApiTokensDocument, options);
 }
+// @ts-ignore
+export function useApiTokensSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<ApiTokensQuery, ApiTokensQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ApiTokensQuery, ApiTokensQueryVariables>;
+export function useApiTokensSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ApiTokensQuery, ApiTokensQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ApiTokensQuery | undefined, ApiTokensQueryVariables>;
 export function useApiTokensSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ApiTokensQuery, ApiTokensQueryVariables>,
 ) {
@@ -4253,6 +4606,13 @@ export function useApiTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<A
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<ApiTokenQuery, ApiTokenQueryVariables>(ApiTokenDocument, options);
 }
+// @ts-ignore
+export function useApiTokenSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<ApiTokenQuery, ApiTokenQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ApiTokenQuery, ApiTokenQueryVariables>;
+export function useApiTokenSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ApiTokenQuery, ApiTokenQueryVariables>,
+): Apollo.UseSuspenseQueryResult<ApiTokenQuery | undefined, ApiTokenQueryVariables>;
 export function useApiTokenSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ApiTokenQuery, ApiTokenQueryVariables>,
 ) {
@@ -4299,6 +4659,13 @@ export function useSettingsUserLazyQuery(
     const options = { ...defaultOptions, ...baseOptions };
     return Apollo.useLazyQuery<SettingsUserQuery, SettingsUserQueryVariables>(SettingsUserDocument, options);
 }
+// @ts-ignore
+export function useSettingsUserSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<SettingsUserQuery, SettingsUserQueryVariables>,
+): Apollo.UseSuspenseQueryResult<SettingsUserQuery, SettingsUserQueryVariables>;
+export function useSettingsUserSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SettingsUserQuery, SettingsUserQueryVariables>,
+): Apollo.UseSuspenseQueryResult<SettingsUserQuery | undefined, SettingsUserQueryVariables>;
 export function useSettingsUserSuspenseQuery(
     baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SettingsUserQuery, SettingsUserQueryVariables>,
 ) {
@@ -4393,6 +4760,247 @@ export type DeleteFavoriteFlowMutationOptions = Apollo.BaseMutationOptions<
     DeleteFavoriteFlowMutation,
     DeleteFavoriteFlowMutationVariables
 >;
+export const FlowTemplatesDocument = gql`
+    query flowTemplates {
+        flowTemplates {
+            ...flowTemplateFragment
+        }
+    }
+    ${FlowTemplateFragmentFragmentDoc}
+`;
+
+/**
+ * __useFlowTemplatesQuery__
+ *
+ * To run a query within a React component, call `useFlowTemplatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFlowTemplatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFlowTemplatesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFlowTemplatesQuery(
+    baseOptions?: Apollo.QueryHookOptions<FlowTemplatesQuery, FlowTemplatesQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<FlowTemplatesQuery, FlowTemplatesQueryVariables>(FlowTemplatesDocument, options);
+}
+export function useFlowTemplatesLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<FlowTemplatesQuery, FlowTemplatesQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<FlowTemplatesQuery, FlowTemplatesQueryVariables>(FlowTemplatesDocument, options);
+}
+// @ts-ignore
+export function useFlowTemplatesSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<FlowTemplatesQuery, FlowTemplatesQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowTemplatesQuery, FlowTemplatesQueryVariables>;
+export function useFlowTemplatesSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowTemplatesQuery, FlowTemplatesQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowTemplatesQuery | undefined, FlowTemplatesQueryVariables>;
+export function useFlowTemplatesSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowTemplatesQuery, FlowTemplatesQueryVariables>,
+) {
+    const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<FlowTemplatesQuery, FlowTemplatesQueryVariables>(FlowTemplatesDocument, options);
+}
+export type FlowTemplatesQueryHookResult = ReturnType<typeof useFlowTemplatesQuery>;
+export type FlowTemplatesLazyQueryHookResult = ReturnType<typeof useFlowTemplatesLazyQuery>;
+export type FlowTemplatesSuspenseQueryHookResult = ReturnType<typeof useFlowTemplatesSuspenseQuery>;
+export type FlowTemplatesQueryResult = Apollo.QueryResult<FlowTemplatesQuery, FlowTemplatesQueryVariables>;
+export const FlowTemplateDocument = gql`
+    query flowTemplate($templateId: ID!) {
+        flowTemplate(templateId: $templateId) {
+            ...flowTemplateFragment
+        }
+    }
+    ${FlowTemplateFragmentFragmentDoc}
+`;
+
+/**
+ * __useFlowTemplateQuery__
+ *
+ * To run a query within a React component, call `useFlowTemplateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFlowTemplateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFlowTemplateQuery({
+ *   variables: {
+ *      templateId: // value for 'templateId'
+ *   },
+ * });
+ */
+export function useFlowTemplateQuery(
+    baseOptions: Apollo.QueryHookOptions<FlowTemplateQuery, FlowTemplateQueryVariables> &
+        ({ variables: FlowTemplateQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<FlowTemplateQuery, FlowTemplateQueryVariables>(FlowTemplateDocument, options);
+}
+export function useFlowTemplateLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<FlowTemplateQuery, FlowTemplateQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<FlowTemplateQuery, FlowTemplateQueryVariables>(FlowTemplateDocument, options);
+}
+// @ts-ignore
+export function useFlowTemplateSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<FlowTemplateQuery, FlowTemplateQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowTemplateQuery, FlowTemplateQueryVariables>;
+export function useFlowTemplateSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowTemplateQuery, FlowTemplateQueryVariables>,
+): Apollo.UseSuspenseQueryResult<FlowTemplateQuery | undefined, FlowTemplateQueryVariables>;
+export function useFlowTemplateSuspenseQuery(
+    baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FlowTemplateQuery, FlowTemplateQueryVariables>,
+) {
+    const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<FlowTemplateQuery, FlowTemplateQueryVariables>(FlowTemplateDocument, options);
+}
+export type FlowTemplateQueryHookResult = ReturnType<typeof useFlowTemplateQuery>;
+export type FlowTemplateLazyQueryHookResult = ReturnType<typeof useFlowTemplateLazyQuery>;
+export type FlowTemplateSuspenseQueryHookResult = ReturnType<typeof useFlowTemplateSuspenseQuery>;
+export type FlowTemplateQueryResult = Apollo.QueryResult<FlowTemplateQuery, FlowTemplateQueryVariables>;
+export const CreateFlowTemplateDocument = gql`
+    mutation createFlowTemplate($input: CreateFlowTemplateInput!) {
+        createFlowTemplate(input: $input) {
+            ...flowTemplateFragment
+        }
+    }
+    ${FlowTemplateFragmentFragmentDoc}
+`;
+export type CreateFlowTemplateMutationFn = Apollo.MutationFunction<
+    CreateFlowTemplateMutation,
+    CreateFlowTemplateMutationVariables
+>;
+
+/**
+ * __useCreateFlowTemplateMutation__
+ *
+ * To run a mutation, you first call `useCreateFlowTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFlowTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFlowTemplateMutation, { data, loading, error }] = useCreateFlowTemplateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateFlowTemplateMutation(
+    baseOptions?: Apollo.MutationHookOptions<CreateFlowTemplateMutation, CreateFlowTemplateMutationVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<CreateFlowTemplateMutation, CreateFlowTemplateMutationVariables>(
+        CreateFlowTemplateDocument,
+        options,
+    );
+}
+export type CreateFlowTemplateMutationHookResult = ReturnType<typeof useCreateFlowTemplateMutation>;
+export type CreateFlowTemplateMutationResult = Apollo.MutationResult<CreateFlowTemplateMutation>;
+export type CreateFlowTemplateMutationOptions = Apollo.BaseMutationOptions<
+    CreateFlowTemplateMutation,
+    CreateFlowTemplateMutationVariables
+>;
+export const UpdateFlowTemplateDocument = gql`
+    mutation updateFlowTemplate($templateId: ID!, $input: UpdateFlowTemplateInput!) {
+        updateFlowTemplate(templateId: $templateId, input: $input) {
+            ...flowTemplateFragment
+        }
+    }
+    ${FlowTemplateFragmentFragmentDoc}
+`;
+export type UpdateFlowTemplateMutationFn = Apollo.MutationFunction<
+    UpdateFlowTemplateMutation,
+    UpdateFlowTemplateMutationVariables
+>;
+
+/**
+ * __useUpdateFlowTemplateMutation__
+ *
+ * To run a mutation, you first call `useUpdateFlowTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFlowTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFlowTemplateMutation, { data, loading, error }] = useUpdateFlowTemplateMutation({
+ *   variables: {
+ *      templateId: // value for 'templateId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateFlowTemplateMutation(
+    baseOptions?: Apollo.MutationHookOptions<UpdateFlowTemplateMutation, UpdateFlowTemplateMutationVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<UpdateFlowTemplateMutation, UpdateFlowTemplateMutationVariables>(
+        UpdateFlowTemplateDocument,
+        options,
+    );
+}
+export type UpdateFlowTemplateMutationHookResult = ReturnType<typeof useUpdateFlowTemplateMutation>;
+export type UpdateFlowTemplateMutationResult = Apollo.MutationResult<UpdateFlowTemplateMutation>;
+export type UpdateFlowTemplateMutationOptions = Apollo.BaseMutationOptions<
+    UpdateFlowTemplateMutation,
+    UpdateFlowTemplateMutationVariables
+>;
+export const DeleteFlowTemplateDocument = gql`
+    mutation deleteFlowTemplate($templateId: ID!) {
+        deleteFlowTemplate(templateId: $templateId)
+    }
+`;
+export type DeleteFlowTemplateMutationFn = Apollo.MutationFunction<
+    DeleteFlowTemplateMutation,
+    DeleteFlowTemplateMutationVariables
+>;
+
+/**
+ * __useDeleteFlowTemplateMutation__
+ *
+ * To run a mutation, you first call `useDeleteFlowTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteFlowTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteFlowTemplateMutation, { data, loading, error }] = useDeleteFlowTemplateMutation({
+ *   variables: {
+ *      templateId: // value for 'templateId'
+ *   },
+ * });
+ */
+export function useDeleteFlowTemplateMutation(
+    baseOptions?: Apollo.MutationHookOptions<DeleteFlowTemplateMutation, DeleteFlowTemplateMutationVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<DeleteFlowTemplateMutation, DeleteFlowTemplateMutationVariables>(
+        DeleteFlowTemplateDocument,
+        options,
+    );
+}
+export type DeleteFlowTemplateMutationHookResult = ReturnType<typeof useDeleteFlowTemplateMutation>;
+export type DeleteFlowTemplateMutationResult = Apollo.MutationResult<DeleteFlowTemplateMutation>;
+export type DeleteFlowTemplateMutationOptions = Apollo.BaseMutationOptions<
+    DeleteFlowTemplateMutation,
+    DeleteFlowTemplateMutationVariables
+>;
 export const CreateFlowDocument = gql`
     mutation createFlow($modelProvider: String!, $input: String!) {
         createFlow(modelProvider: $modelProvider, input: $input) {
@@ -4400,8 +5008,6 @@ export const CreateFlowDocument = gql`
         }
     }
     ${FlowFragmentFragmentDoc}
-    ${TerminalFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 export type CreateFlowMutationFn = Apollo.MutationFunction<CreateFlowMutation, CreateFlowMutationVariables>;
 
@@ -4466,8 +5072,8 @@ export type DeleteFlowMutationHookResult = ReturnType<typeof useDeleteFlowMutati
 export type DeleteFlowMutationResult = Apollo.MutationResult<DeleteFlowMutation>;
 export type DeleteFlowMutationOptions = Apollo.BaseMutationOptions<DeleteFlowMutation, DeleteFlowMutationVariables>;
 export const PutUserInputDocument = gql`
-    mutation putUserInput($flowId: ID!, $input: String!) {
-        putUserInput(flowId: $flowId, input: $input)
+    mutation putUserInput($flowId: ID!, $input: String!, $modelProvider: String) {
+        putUserInput(flowId: $flowId, input: $input, modelProvider: $modelProvider)
     }
 `;
 export type PutUserInputMutationFn = Apollo.MutationFunction<PutUserInputMutation, PutUserInputMutationVariables>;
@@ -4487,6 +5093,7 @@ export type PutUserInputMutationFn = Apollo.MutationFunction<PutUserInputMutatio
  *   variables: {
  *      flowId: // value for 'flowId'
  *      input: // value for 'input'
+ *      modelProvider: // value for 'modelProvider'
  *   },
  * });
  */
@@ -4614,8 +5221,6 @@ export const CreateAssistantDocument = gql`
         }
     }
     ${FlowFragmentFragmentDoc}
-    ${TerminalFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
     ${AssistantFragmentFragmentDoc}
 `;
 export type CreateAssistantMutationFn = Apollo.MutationFunction<
@@ -4704,7 +5309,6 @@ export const StopAssistantDocument = gql`
         }
     }
     ${AssistantFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 export type StopAssistantMutationFn = Apollo.MutationFunction<StopAssistantMutation, StopAssistantMutationVariables>;
 
@@ -4788,7 +5392,6 @@ export const TestAgentDocument = gql`
         }
     }
     ${AgentTestResultFragmentFragmentDoc}
-    ${TestResultFragmentFragmentDoc}
 `;
 export type TestAgentMutationFn = Apollo.MutationFunction<TestAgentMutation, TestAgentMutationVariables>;
 
@@ -4827,8 +5430,6 @@ export const TestProviderDocument = gql`
         }
     }
     ${ProviderTestResultFragmentFragmentDoc}
-    ${AgentTestResultFragmentFragmentDoc}
-    ${TestResultFragmentFragmentDoc}
 `;
 export type TestProviderMutationFn = Apollo.MutationFunction<TestProviderMutation, TestProviderMutationVariables>;
 
@@ -4869,8 +5470,6 @@ export const CreateProviderDocument = gql`
         }
     }
     ${ProviderConfigFragmentFragmentDoc}
-    ${AgentsConfigFragmentFragmentDoc}
-    ${AgentConfigFragmentFragmentDoc}
 `;
 export type CreateProviderMutationFn = Apollo.MutationFunction<CreateProviderMutation, CreateProviderMutationVariables>;
 
@@ -4912,8 +5511,6 @@ export const UpdateProviderDocument = gql`
         }
     }
     ${ProviderConfigFragmentFragmentDoc}
-    ${AgentsConfigFragmentFragmentDoc}
-    ${AgentConfigFragmentFragmentDoc}
 `;
 export type UpdateProviderMutationFn = Apollo.MutationFunction<UpdateProviderMutation, UpdateProviderMutationVariables>;
 
@@ -5524,7 +6121,6 @@ export const AssistantCreatedDocument = gql`
         }
     }
     ${AssistantFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 
 /**
@@ -5562,7 +6158,6 @@ export const AssistantUpdatedDocument = gql`
         }
     }
     ${AssistantFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 
 /**
@@ -5600,7 +6195,6 @@ export const AssistantDeletedDocument = gql`
         }
     }
     ${AssistantFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 
 /**
@@ -5715,8 +6309,6 @@ export const FlowCreatedDocument = gql`
         }
     }
     ${FlowFragmentFragmentDoc}
-    ${TerminalFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 
 /**
@@ -5752,8 +6344,6 @@ export const FlowDeletedDocument = gql`
         }
     }
     ${FlowFragmentFragmentDoc}
-    ${TerminalFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 
 /**
@@ -5789,8 +6379,6 @@ export const FlowUpdatedDocument = gql`
         }
     }
     ${FlowFragmentFragmentDoc}
-    ${TerminalFragmentFragmentDoc}
-    ${ProviderFragmentFragmentDoc}
 `;
 
 /**
@@ -5826,7 +6414,6 @@ export const TaskCreatedDocument = gql`
         }
     }
     ${TaskFragmentFragmentDoc}
-    ${SubtaskFragmentFragmentDoc}
 `;
 
 /**
@@ -5907,8 +6494,6 @@ export const ProviderCreatedDocument = gql`
         }
     }
     ${ProviderConfigFragmentFragmentDoc}
-    ${AgentsConfigFragmentFragmentDoc}
-    ${AgentConfigFragmentFragmentDoc}
 `;
 
 /**
@@ -5944,8 +6529,6 @@ export const ProviderUpdatedDocument = gql`
         }
     }
     ${ProviderConfigFragmentFragmentDoc}
-    ${AgentsConfigFragmentFragmentDoc}
-    ${AgentConfigFragmentFragmentDoc}
 `;
 
 /**
@@ -5981,8 +6564,6 @@ export const ProviderDeletedDocument = gql`
         }
     }
     ${ProviderConfigFragmentFragmentDoc}
-    ${AgentsConfigFragmentFragmentDoc}
-    ${AgentConfigFragmentFragmentDoc}
 `;
 
 /**
@@ -6154,3 +6735,117 @@ export function useSettingsUserUpdatedSubscription(
 }
 export type SettingsUserUpdatedSubscriptionHookResult = ReturnType<typeof useSettingsUserUpdatedSubscription>;
 export type SettingsUserUpdatedSubscriptionResult = Apollo.SubscriptionResult<SettingsUserUpdatedSubscription>;
+export const FlowTemplateCreatedDocument = gql`
+    subscription flowTemplateCreated {
+        flowTemplateCreated {
+            ...flowTemplateFragment
+        }
+    }
+    ${FlowTemplateFragmentFragmentDoc}
+`;
+
+/**
+ * __useFlowTemplateCreatedSubscription__
+ *
+ * To run a query within a React component, call `useFlowTemplateCreatedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useFlowTemplateCreatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFlowTemplateCreatedSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFlowTemplateCreatedSubscription(
+    baseOptions?: Apollo.SubscriptionHookOptions<
+        FlowTemplateCreatedSubscription,
+        FlowTemplateCreatedSubscriptionVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSubscription<FlowTemplateCreatedSubscription, FlowTemplateCreatedSubscriptionVariables>(
+        FlowTemplateCreatedDocument,
+        options,
+    );
+}
+export type FlowTemplateCreatedSubscriptionHookResult = ReturnType<typeof useFlowTemplateCreatedSubscription>;
+export type FlowTemplateCreatedSubscriptionResult = Apollo.SubscriptionResult<FlowTemplateCreatedSubscription>;
+export const FlowTemplateUpdatedDocument = gql`
+    subscription flowTemplateUpdated {
+        flowTemplateUpdated {
+            ...flowTemplateFragment
+        }
+    }
+    ${FlowTemplateFragmentFragmentDoc}
+`;
+
+/**
+ * __useFlowTemplateUpdatedSubscription__
+ *
+ * To run a query within a React component, call `useFlowTemplateUpdatedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useFlowTemplateUpdatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFlowTemplateUpdatedSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFlowTemplateUpdatedSubscription(
+    baseOptions?: Apollo.SubscriptionHookOptions<
+        FlowTemplateUpdatedSubscription,
+        FlowTemplateUpdatedSubscriptionVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSubscription<FlowTemplateUpdatedSubscription, FlowTemplateUpdatedSubscriptionVariables>(
+        FlowTemplateUpdatedDocument,
+        options,
+    );
+}
+export type FlowTemplateUpdatedSubscriptionHookResult = ReturnType<typeof useFlowTemplateUpdatedSubscription>;
+export type FlowTemplateUpdatedSubscriptionResult = Apollo.SubscriptionResult<FlowTemplateUpdatedSubscription>;
+export const FlowTemplateDeletedDocument = gql`
+    subscription flowTemplateDeleted {
+        flowTemplateDeleted {
+            ...flowTemplateFragment
+        }
+    }
+    ${FlowTemplateFragmentFragmentDoc}
+`;
+
+/**
+ * __useFlowTemplateDeletedSubscription__
+ *
+ * To run a query within a React component, call `useFlowTemplateDeletedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useFlowTemplateDeletedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFlowTemplateDeletedSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFlowTemplateDeletedSubscription(
+    baseOptions?: Apollo.SubscriptionHookOptions<
+        FlowTemplateDeletedSubscription,
+        FlowTemplateDeletedSubscriptionVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSubscription<FlowTemplateDeletedSubscription, FlowTemplateDeletedSubscriptionVariables>(
+        FlowTemplateDeletedDocument,
+        options,
+    );
+}
+export type FlowTemplateDeletedSubscriptionHookResult = ReturnType<typeof useFlowTemplateDeletedSubscription>;
+export type FlowTemplateDeletedSubscriptionResult = Apollo.SubscriptionResult<FlowTemplateDeletedSubscription>;

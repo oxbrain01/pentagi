@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
+	"unicode/utf8"
 	"slices"
 	"strings"
 	"time"
@@ -43,6 +45,8 @@ const (
 var nonRetriableChainErrors = []string{
 	"MALFORMED_FUNCTION_CALL",
 }
+
+const malformedFunctionCallRecoveryPrompt = "SYSTEM RECOVERY MODE: Your previous response had malformed function-calling output. Return exactly one valid tool call using strict JSON arguments that satisfy the selected tool schema. Do not include prose, markdown, xml, or analysis. Keep arguments concise and ASCII-safe when possible."
 
 type callResult struct {
 	streamID  int64
@@ -421,17 +425,20 @@ func (fp *flowProvider) callWithRetries(
 	executionContext string,
 ) (*callResult, error) {
 	var (
-		err     error
-		errs    []error
-		msgType = database.MsglogTypeAnswer
-		resp    *llms.ContentResponse
-		result  callResult
+		err                        error
+		errs                       []error
+		msgType                    = database.MsglogTypeAnswer
+		resp                       *llms.ContentResponse
+		result                     callResult
+		attemptedMalformedRecovery bool
+		recoveryChain              []llms.MessageContent
 	)
 
 	logger := logrus.WithContext(ctx).WithFields(enrichLogrusFields(fp.flowID, taskID, subtaskID, logrus.Fields{
 		"agent":        fp.Type(),
 		"msg_chain_id": chainID,
 		"agent_type":   optAgentType,
+		"model":        fp.Model(optAgentType),
 	}))
 
 	ticker := time.NewTicker(delayBetweenRetries)
@@ -536,7 +543,12 @@ func (fp *flowProvider) callWithRetries(
 			}
 		}
 
-		resp, err = fp.CallWithTools(ctx, optAgentType, chain, executor.Tools(), streamCb)
+		callChain := chain
+		if attemptedMalformedRecovery && len(recoveryChain) > 0 {
+			callChain = recoveryChain
+		}
+
+		resp, err = fp.CallWithTools(ctx, optAgentType, callChain, executor.Tools(), streamCb)
 		if err == nil {
 			err = fillResult(resp)
 		}
@@ -549,9 +561,20 @@ func (fp *flowProvider) callWithRetries(
 				"error":           err.Error()[:min(200, len(err.Error()))],
 			}).Warn("agent chain call failed, will retry")
 
-			// Some provider stop-reasons are deterministic and usually do not recover on immediate retry.
-			// Fast-forward to caller reflector to avoid burning retries and delay budget.
+			// Give malformed function-calling one strict self-heal attempt before
+			// fast-forwarding to caller reflector.
 			if isNonRetriableChainError(err) {
+				if !attemptedMalformedRecovery && isMalformedFunctionCallError(err) {
+					attemptedMalformedRecovery = true
+					recoveryChain = buildMalformedFunctionCallRecoveryChain(chain)
+					logger.WithFields(logrus.Fields{
+						"error":           err.Error()[:min(200, len(err.Error()))],
+						"last_human_len":  len(fp.getLastHumanMessage(chain)),
+						"non_ascii_ratio": math.Round(nonASCIIRatio(fp.getLastHumanMessage(chain))*1000) / 1000,
+					}).Warn("non-retriable malformed function call detected, trying one strict recovery retry")
+					continue
+				}
+
 				logger.WithField("error", err.Error()[:min(200, len(err.Error()))]).
 					Warn("non-retriable agent chain error detected, skipping remaining retries")
 				idx = maxRetriesToCallAgentChain - 1
@@ -583,6 +606,37 @@ func (fp *flowProvider) callWithRetries(
 	}
 
 	return &result, nil
+}
+
+func isMalformedFunctionCallError(err error) bool {
+	return err != nil && strings.Contains(err.Error(), "MALFORMED_FUNCTION_CALL")
+}
+
+func buildMalformedFunctionCallRecoveryChain(chain []llms.MessageContent) []llms.MessageContent {
+	recoveryChain := make([]llms.MessageContent, 0, len(chain)+1)
+	recoveryChain = append(recoveryChain, chain...)
+	recoveryChain = append(recoveryChain, llms.TextParts(llms.ChatMessageTypeHuman, malformedFunctionCallRecoveryPrompt))
+	return recoveryChain
+}
+
+func nonASCIIRatio(input string) float64 {
+	if input == "" {
+		return 0
+	}
+
+	total := utf8.RuneCountInString(input)
+	if total == 0 {
+		return 0
+	}
+
+	nonASCII := 0
+	for _, r := range input {
+		if r > 127 {
+			nonASCII++
+		}
+	}
+
+	return float64(nonASCII) / float64(total)
 }
 
 func isNonRetriableChainError(err error) bool {

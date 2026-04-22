@@ -17,10 +17,10 @@ Nếu không chỉ định, dùng `BALANCED`.
 === WEB_ASSESSMENT_INPUT ===
 execution_profile: BALANCED
 auth_required: yes
-base_url: https://app.example.com
+base_url: https://gsdt.gtrack.vn
 dast_allowed: yes
 notes: UI deep link dùng #/
-in_scope_hosts: app.example.com,api.example.com
+in_scope_hosts: *
 out_of_scope_hosts: admin.example.net
 max_requests_per_minute: 120
 max_parallel_requests: 3
@@ -136,15 +136,16 @@ disallowed_actions: destructive_data_change,bulk_fuzz,credential_stuffing
 3.1 Nguyên tắc (khi `auth_required: yes`)
 - Không giả định browser có DevTools/Network capture; `browser` là scraper HTML/MD/links.
 - Ưu tiên số 1: dùng `BROWSER_SESSION` (copy từ localStorage sau khi login tay).
+- Với workflow chạy trong Docker/worker PentAGI: chỉ dùng session được truyền qua input block/env; không hướng dẫn `docker run -v ...` để "lấy session" từ máy local.
 - Nếu `BROWSER_SESSION` không dùng được: fallback API login chỉ khi RoE cho phép và có thông tin cần thiết.
 
 3.2 Block bắt buộc khi có phiên đăng nhập (`auth_required: yes`, ưu tiên #1) — **chỉ paste giá trị thật từ môi trường được phép; không commit file này chứa secret**  
 (Khi `auth_required: no` → **không** cần block này; có thể xóa hoặc để trống toàn bộ placeholder.)
 ```text
 === BROWSER_SESSION ===
-access_token: <ACCESS_TOKEN>
-refresh_token: <REFRESH_TOKEN_OR_N/A>
-expires_at: <UNIX_TS_OR_N/A>
+access_token: <ACCESS_TOKEN_JWT>
+refresh_token: <REFRESH_TOKEN>
+expires_at: <UNIX_EPOCH_SECONDS>
 token_type: bearer
 === END BROWSER_SESSION ===
 ```
@@ -153,6 +154,7 @@ token_type: bearer
 - Với HTTP request tới API/backend trong scope: set `Authorization: Bearer <access_token>`
 - Nếu cần cookie song song: thêm `Cookie:` theo response Set-Cookie (nếu app yêu cầu)
 - `refresh_token` chỉ dùng khi gọi trực tiếp refresh grant; nếu thiếu điều kiện cần (vd anon key) thì không retry vô hạn.
+- Trong Docker worker, ưu tiên biến môi trường tạm thời/runtime secret; không ghi token vào file prompt/repo hoặc log thô.
 
 3.4 Fallback API login (chỉ khi BROWSER_SESSION không dùng được)
 - Thông thường cần `apikey: <SUPABASE_ANON_KEY>` cho GoTrue password grant
@@ -160,6 +162,11 @@ token_type: bearer
 
 3.5 Anti-fail (chỉ `auth_required: yes`)
 - Login fail 2 lần cùng lỗi => `ask` với checklist thiếu (BROWSER_SESSION mới trước, anon sau); không lặp vô nghĩa.
+
+3.6 Anti `MALFORMED_FUNCTION_CALL` (ổn định orchestration)
+- Nếu provider trả `MALFORMED_FUNCTION_CALL` hoặc phản hồi không có tool call hợp lệ 2 lần liên tiếp: dừng retry nhánh hiện tại.
+- Ưu tiên phát barrier `ask` với blocker ngắn gọn + input thiếu cụ thể; nếu đã đủ dữ liệu và chỉ còn tổng hợp thì phát `done`.
+- Không lặp reflector/retry mù quá 2 vòng cho cùng một lỗi định dạng function call.
 
 ---
 ## 4. SAFETY & TRUTHFULNESS (BẮT BUỘC)

@@ -15,6 +15,7 @@ import (
 	"pentagi/pkg/observability/langfuse"
 	"pentagi/pkg/schema"
 
+	"github.com/sirupsen/logrus"
 	"github.com/vxcontrol/langchaingo/documentloaders"
 	"github.com/vxcontrol/langchaingo/llms"
 	"github.com/vxcontrol/langchaingo/textsplitter"
@@ -580,7 +581,13 @@ func (ce *customExecutor) storeToolResult(ctx context.Context, name, result stri
 	}
 
 	if _, err := ce.store.AddDocuments(ctx, docs); err != nil {
-		return fmt.Errorf("failed to store tool result: %w", err)
+		// Long-term vector store is best-effort: embedding/API outages (429/503) must not
+		// fail the underlying tool; the agent still needs the real terminal/file result.
+		logrus.WithContext(ctx).WithError(err).WithFields(logrus.Fields{
+			"tool_name": name,
+			"flow_id":   ce.flowID,
+		}).Warn("failed to store tool result in vector memory; continuing without long-term store")
+		return nil
 	}
 
 	if agentCtx, ok := GetAgentContext(ctx); ok {

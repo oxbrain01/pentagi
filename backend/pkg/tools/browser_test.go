@@ -36,6 +36,22 @@ func (m *screenshotProviderMock) PutScreenshot(_ context.Context, name, url stri
 	return 1, m.returnErr
 }
 
+func TestValidateBrowserFetchURL(t *testing.T) {
+	t.Parallel()
+	if err := validateBrowserFetchURL("https://example.com/path"); err != nil {
+		t.Fatalf("https: %v", err)
+	}
+	if err := validateBrowserFetchURL("http://127.0.0.1:3000/"); err != nil {
+		t.Fatalf("http: %v", err)
+	}
+	if err := validateBrowserFetchURL(""); err == nil {
+		t.Fatal("empty url: want error")
+	}
+	if err := validateBrowserFetchURL("file:///work/package-lock.json"); err == nil {
+		t.Fatal("file://: want error")
+	}
+}
+
 func TestBrowserResolveUrl(t *testing.T) {
 	tests := []struct {
 		name      string

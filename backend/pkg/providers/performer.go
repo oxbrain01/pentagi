@@ -37,6 +37,9 @@ const (
 	delayBetweenRetries            = 5 * time.Second
 )
 
+// Only match provider stop reasons that typically do not recover by immediate retry.
+// Do not treat the generic empty-response error as non-retriable: Gemini may return
+// stop reason STOP with no content transiently; those should use retries/reflector.
 var nonRetriableChainErrors = []string{
 	"MALFORMED_FUNCTION_CALL",
 }

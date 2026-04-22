@@ -370,6 +370,23 @@ func (fp *flowProvider) GenerateSubtasks(ctx context.Context, taskID int64) ([]t
 
 	subtasks, err := fp.performSubtasksGenerator(ctx, taskID, systemGeneratorTmpl, generatorTmpl, tasksInfo.Task.Input)
 	if err != nil {
+		// Fail-open fallback: if generator cannot produce subtasks due to deterministic
+		// provider/tool-calling failures (e.g. MALFORMED_FUNCTION_CALL), keep the task
+		// alive with a single baseline subtask derived from the task input.
+		if isNonRetriableChainError(err) {
+			fallback := []tools.SubtaskInfo{
+				{
+					Title:       fp.fallbackSubtaskTitle(tasksInfo.Task.Title),
+					Description: fp.fallbackSubtaskDescription(tasksInfo.Task.Input),
+				},
+			}
+			logger.WithError(err).Warn("subtasks generator failed with non-retriable error, using fallback single subtask")
+			generatorEvaluator.End(
+				langfuse.WithEvaluatorStatus(fmt.Sprintf("degraded: generator failed, using fallback subtask: %s", err.Error())),
+				langfuse.WithEvaluatorOutput(fallback),
+			)
+			return fallback, nil
+		}
 		return nil, wrapErrorEndEvaluatorSpan(ctx, generatorEvaluator, "failed to perform subtasks generator", err)
 	}
 
@@ -379,6 +396,28 @@ func (fp *flowProvider) GenerateSubtasks(ctx context.Context, taskID int64) ([]t
 	)
 
 	return subtasks, nil
+}
+
+func (fp *flowProvider) fallbackSubtaskTitle(taskTitle string) string {
+	title := strings.TrimSpace(taskTitle)
+	if title == "" {
+		return "Execute security audit task"
+	}
+	if len(title) > 120 {
+		return title[:120]
+	}
+	return title
+}
+
+func (fp *flowProvider) fallbackSubtaskDescription(taskInput string) string {
+	input := strings.TrimSpace(taskInput)
+	if input == "" {
+		return "Continue with the current task goal using available tools and report verified findings."
+	}
+	if len(input) > 4000 {
+		return input[:4000]
+	}
+	return input
 }
 
 func (fp *flowProvider) RefineSubtasks(ctx context.Context, taskID int64) ([]tools.SubtaskInfo, error) {

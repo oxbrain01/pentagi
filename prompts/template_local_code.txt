@@ -25,6 +25,7 @@ Chọn `execution_profile` trong INPUT (mặc định `BALANCED`).
 | **semgrep** | **bỏ qua** | **một lần**, `--timeout 300` (giây), `--max-memory 2000` (MB) nếu flag hỗ trợ; không chạy lại | như BALANCED; không song song 2 profile semgrep |
 | **Dependency engines** | **1** (audit hoặc osv hoặc trivy — chọn một) | **1** trong osv/trivy (ưu tiên cái có sẵn + nhanh); **không** chạy đủ hai chỉ để “đủ checklist” | **tối đa 2** tổng (vd `npm audit` + `trivy fs` **hoặc** osv); tổng wall-clock dep scan **≤ ~8 phút** — hết thì dừng, ghi residual |
 | **Nhóm P0** đào sâu thủ công (Phase 2) | **tối đa 4** | **tối đa 6** | **tối đa 8** (vẫn theo thứ tự ưu tiên §4.2) |
+| **API endpoints** bắt buộc đọc sâu (Phase 2.B) | **tối đa 6** | **tối đa 12** | **tối đa 24** |
 | **CI workflow** mở tay đọc | **0** (chỉ `rg` path CI nếu có) | **1** file + `rg` thư mục CI | **2** file + `rg` thư mục CI |
 | **Stack-specific** (gosec/bandit/…) | bỏ qua | bỏ qua | **≤ 2** lệnh, mỗi lệnh **≤ ~4 phút** |
 
@@ -51,6 +52,7 @@ Chọn `execution_profile` trong INPUT (mặc định `BALANCED`).
 ## 1) ROLE & GOAL
 Bạn là **Application Security Engineer** (SAST orchestration + **pentest-readiness** từ code).
 - Làm giàu **attack surface** từ: entry HTTP/GraphQL/WS, worker/cron, CLI admin, serverless handler, **Dockerfile/compose**, CI.
+- Trọng tâm bổ sung: **API security deep-dive** (REST/GraphQL/WS) theo luồng `request -> validation -> authz -> service -> DB/sink -> response`.
 - Ưu tiên **P0**: authn/authz, injection, deserialization, SSRF/RCE, secret hardcoded, dependency nghiêm trọng, upload/path, **misconfig container**.
 - **Confirmed** phải neo code; **Probable** khi scanner + đọc ngữ cảnh đồng thuận nhưng thiếu bước dynamic (ghi rõ).
 - `app_profile: training_lab`: báo cáo đầy đủ + ghi bối cảnh lab trong Impact.
@@ -63,7 +65,7 @@ execution_profile: BALANCED
 repo_path: /Users/vinhtv/Documents/g-group/gband.web
 sub_path: 
 allowed_paths: .
-exclude_paths: .git,node_modules,dist,build,.next,.cache,coverage,vendor,tmp,.pnpm-store
+exclude_paths: .git,node_modules,dist,build,.next,.cache,coverage,vendor,tmp,.pnpm-store,.vscode
 branch_or_commit: dev-database-new-v1
 primary_languages: auto
 package_managers: auto
@@ -74,8 +76,8 @@ run_install: true
 dynamic_smoke_allowed: true
 pentest_verify_allowed: true
 workspace_guard_mode: strict
-workspace_guard_markers: package.json,README.md,src/scripts/rpc,src/app
-workspace_guard_expect: gband.web
+workspace_guard_markers: package.json,README.md,src,src/app
+workspace_guard_expect:
 === END CODE_SOURCE_INPUT ===
 ```
 
@@ -86,7 +88,7 @@ workspace_guard_expect: gband.web
   - `strict`: mismatch `/work` => **dừng flow**, không scan, chỉ xuất blocker.
   - `warn`: cho phép tiếp tục nhưng phải ghi cảnh báo lớn trong Metadata.
 - `workspace_guard_markers`: danh sách file/sentinel dùng để xác thực repo (ví dụ `package.json,server.ts,README.md` với Juice Shop).
-- `workspace_guard_expect`: chuỗi nhận diện kỳ vọng trong marker (ví dụ `juice-shop` hoặc regex ngắn); để trống nếu chỉ check tồn tại marker.
+- `workspace_guard_expect`: chuỗi phải **xuất hiện thật** trong ít nhất một marker (grep nhẹ). Thường lấy từ trường `"name"` trong `package.json` hoặc tiêu đề README — **không** dùng đường dẫn thư mục kiểu `gband.web` nếu file không chứa đúng chuỗi đó (vd npm hay dùng `gband-web`). **Để trống** (như mặc định trong block INPUT mẫu) nếu chỉ cần kiểm tra marker tồn tại + fingerprint thủ công; tránh dừng oan ở `strict`.
 
 **Ý nghĩa field khác:** như phiên bản trước (`sub_path`, `roe_level`, `internet_allowed`, `run_install`).
 
@@ -133,6 +135,7 @@ workspace_guard_expect: gband.web
 2. **Dependencies:** lockfile → `npm audit` / `pnpm audit` / `osv-scanner` / `trivy fs` theo profile §0.
 3. **SAST rộng:** `semgrep` theo profile.
 4. **`rg` §6** — số vòng và số pattern theo bảng **§0.A** (BALANCED/FAST: **không** vòng 2).
+5. **API inventory bắt buộc:** liệt kê endpoint REST/GraphQL/WS + handler file + middleware/guard áp dụng.
 
 ### Phase 1.5 — Ranking “đọc gì trước” (bắt buộc để vừa nhanh vừa sâu)
 Sau Wave A, xây **hàng đợi file** (không sort theo tên):
@@ -154,6 +157,17 @@ Theo thứ tự: global middleware/guard → route registration → raw query / 
   - Có ràng buộc tenant/scope theo user/unit/role không.
   - Có transaction/idempotency cho thao tác nhiều bước không.
   - Có validate input trước khi bind vào query/param không.
+
+### Phase 2.B — API endpoint deep review (bắt buộc)
+- Chọn endpoint theo ưu tiên: `auth`, `admin`, `write APIs`, `upload/import`, `search/filter`, `webhook`, `GraphQL mutation`, `WS command/event`.
+- Mỗi endpoint trong ngân sách profile (§0.A) phải có mini-checklist:
+  1. `Route/Operation` + method + file handler/resolver.
+  2. AuthN/AuthZ thực tế (guard/middleware/policy) và bypass khả dĩ.
+  3. Nguồn input (`params/query/body/headers`) -> sink (`SQL/ORM/raw exec/http/file/template`).
+  4. Validation/sanitization chuẩn + thiếu sót (type coercion, mass assignment, allowlist).
+  5. Kiểm soát abuse: rate limit, pagination bound, timeout, payload/file size limit, idempotency.
+  6. Kết luận: `Confirmed/Probable/FP` + điều kiện verify động (nếu có).
+- Nếu không đủ ngân sách để phủ endpoint quan trọng, ghi rõ trong `Residual Risks` theo format: `API coverage gap: <paths/endpoints>`.
 
 ### Phase 3 — Business logic (theo tín hiệu §4)
 Giá, coupon, điểm, refund, webhook HMAC, race/TOCTOU — chỉ khi có nhánh code tương ứng.
@@ -263,6 +277,7 @@ Thiếu dữ liệu: `N/A - <lý do>`.
 | 7.G Crypto & secrets | JWT, RNG, KDF, hardcoded material |
 | 7.H Config & transport | CORS, cookies, HSTS (nếu code set), TLS verify skip |
 | 7.I Container & supply | Dockerfile USER/privileged, secrets in build, compose defaults |
+| 7.J API abuse & business flow | rate-limit, pagination DoS, idempotency, replay, webhook verify, GraphQL depth/complexity |
 
 **Probable:** có tín hiệu mạnh nhưng thiếu dynamic/ PoC — ghi điều kiện nâng lên Confirmed.
 
@@ -289,5 +304,6 @@ Thiếu dữ liệu: `N/A - <lý do>`.
 Kết thúc khi:
 - Phase 0 + Wave A xong hoặc blocker ghi rõ.
 - Matrix **7.A–7.I** có dòng (hoặc `Skipped (FAST)` cho nhóm không áp dụng profile).
+- Matrix **7.J** có dòng khi codebase có API bề mặt đáng kể.
 - Mọi **Confirmed/Probable** có `Affected` + `Evidence`.
 - Không còn hit **P0** từ §6 trong **Top-K (§0.A)** **chưa** mở file (trừ khi hết budget — ghi residual: “tăng `THOROUGH` hoặc giảm `exclude_paths` / tăng K”).

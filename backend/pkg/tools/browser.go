@@ -121,6 +121,10 @@ func (b *browser) Handle(ctx context.Context, name string, args json.RawMessage)
 		return "", fmt.Errorf("failed to unmarshal browser action: %w", err)
 	}
 
+	if err := validateBrowserFetchURL(action.Url); err != nil {
+		return b.wrapCommandResult(ctx, name, "", action.Url, "", err)
+	}
+
 	logger = logger.WithFields(logrus.Fields{
 		"action": action.Action,
 		"url":    action.Url,
@@ -467,6 +471,22 @@ func (b *browser) callScraper(url string) ([]byte, error) {
 	}
 
 	return content, nil
+}
+
+// validateBrowserFetchURL rejects targets the HTTP scraper cannot fetch.
+func validateBrowserFetchURL(raw string) error {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return fmt.Errorf("url is empty")
+	}
+	u, err := url.Parse(raw)
+	if err != nil {
+		return fmt.Errorf("invalid url: %w", err)
+	}
+	if strings.EqualFold(u.Scheme, "file") {
+		return fmt.Errorf(`file:// URLs are not supported by the browser tool (scraper cannot read the flow workspace); use the "file" tool for paths under /work or "terminal" (e.g. head/cat)`)
+	}
+	return nil
 }
 
 func (b *browser) IsAvailable() bool {

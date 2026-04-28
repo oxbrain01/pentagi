@@ -6,21 +6,35 @@
 ### 0.B) OWASP Juice Shop / intentional-vuln lab — benchmark overrides (optional)
 If `benchmark_mode: owasp_juice_shop` **or** `app_profile: training_lab`, treat the target as a **training lab with intentional vulnerabilities** and optimize for **coverage + traceability**, not “production minimal noise”.
 
+**Auto-detect lab mode (mandatory):**
+- Even when `benchmark_mode` is not explicitly set, run a lightweight marker probe in `/work` during Phase 0.
+- If any strong marker is found, set `effective_benchmark_mode=owasp_juice_shop` for this run:
+  - `solveIf(challenges.`
+  - `notSolved(challenges.`
+  - `challengeUtils.solveIf(challenges.`
+  - `vuln-code-snippet`
+  - `data/static/challenges.yml` exists
+- Record activation reason in `## Engagement Metadata` as `benchmark_auto_detected: true|false` with matched markers.
+
 **Do:**
 - Prefer `execution_profile: THOROUGH` unless the operator explicitly needs `FAST`.
 - Prefer `app_profile: training_lab` (lab fidelity) and label business impact accordingly.
 - Tighten `exclude_paths` for lab benchmark runs: **do not** blanket-exclude `test/`, `cypress/`, `data/static/codefixes/` by default — many lab signals and fixtures live there. Still exclude huge dependency trees (`node_modules`, build outputs).
 
 **Mandatory lab traceability (in addition to §4):**
-1) Read `/work/data/static/challenges.yml` (or the repo’s equivalent static challenges file) and extract **all** `key:` values.
-2) For each `key`, locate implementation anchors in `/work`:
+1) Build challenge key set with a fallback chain:
+   - Preferred: parse `/work/data/static/challenges.yml` (or equivalent) and extract all `key:` values.
+   - Fallback (when file is missing/inaccessible): infer keys from code anchors by mining `solveIf(challenges.<key>)`, `notSolved(challenges.<key>)`, and `challengeUtils.solveIf(challenges.<key>)`.
+2) For each discovered `key`, locate implementation anchors in `/work`:
    - `solveIf(challenges.<key>` / `notSolved(challenges.<key>` / `challenges.<key>`
    - `vuln-code-snippet` markers referencing `<key>`
+   - If using file-parsed keys, accept anchors only for those keys.
+   - If using fallback inferred keys, ignore obvious non-key properties (for example `challenges.map`, `challenges.filter`, `challenges.some`) as challenge evidence.
 3) Produce `## Challenge Coverage Matrix` mapping: `challenge_key | name | handler files (/work/...) | endpoints (method+path) | status (Confirmed/Probable/Not found in code/Out of scope) | evidence refs`.
 4) If an endpoint is listed in `server.ts` (or router registry) but handler file is not opened yet, **queue the handler** even if it is outside Top‑K from scanners (this is the common miss for SSRF/NoSQL-style routes).
 
 **Budget overrides for lab benchmark (multiply §0.A caps, round up):**
-- `Top-K`: **×2**
+- `Top-K`: **×2** (and in THOROUGH enforce floor `Top-K >= 30`)
 - `rg` rounds: **+1** for `BALANCED` (total **2**) and **+0** for `THOROUGH` (keep **2** but allow the second round to target `routes/**` + `data/**` if first round is noisy)
 - `Max rg patterns`: **+8** (add Juice Shop patterns below)
 - Manual P0 groups: **+4**
@@ -29,12 +43,12 @@ If `benchmark_mode: owasp_juice_shop` **or** `app_profile: training_lab`, treat 
   - `-g 'routes/**' -g 'lib/**' -g 'frontend/**'` (choose what exists)
 
 ### 0.C) Speed + token optimization rules (mandatory in lab benchmark mode)
-When `benchmark_mode: owasp_juice_shop` is enabled:
+When `benchmark_mode: owasp_juice_shop` **or** `effective_benchmark_mode=owasp_juice_shop` is enabled:
 - **Never echo this prompt/contracts** in report output. Output only audit results.
 - Keep report concise and evidence-driven: avoid repeating methodology prose already implied by headings.
-- **Function-call stability first:** every assistant turn must return exactly one valid tool call or one barrier (`ask`/`done`); do not return plain prose when a tool is expected.
+- **Function-call stability first:** prefer tool/barrier-first turns; if a malformed function call happens twice, fall back to a smaller tool step or emit `ask` with blocker details.
 - Prefer one-pass extraction + reuse:
-  - Parse `challenges.yml` once.
+  - Build key set once (from `challenges.yml` if present, otherwise from code anchor inference).
   - Build a single in-memory map `key -> anchors/endpoints/status`.
 - For `## Challenge Coverage Matrix`, use compact rows:
   - `challenge_key | status | handler_refs | endpoint_refs | evidence_ref_ids`
@@ -62,7 +76,7 @@ Choose `execution_profile` in INPUT (default `BALANCED`).
 ### 0.A) HARD LIMITS (speed caps — mandatory)
 | Item | FAST | BALANCED | THOROUGH |
 |---|---|---|---|
-| **Top-K** files read after ranking (§4.1) | **6** | **12** | **20** |
+| **Top-K** files read after ranking (§4.1) | **6** | **12** | **24** |
 | **`rg` rounds in §6** (pipeline runs) | **1** | **1** | **2** (round 2 only in high-hit subdirectories) |
 | **Max `rg` patterns** per round | **8** (stack-selected per §6) | **12** | **all §6** (still throttle if >200 hits/pattern) |
 | Extra **callee files** per hot file (§4.1) | **0** | **1** | **2** |
@@ -121,7 +135,7 @@ internet_allowed: true
 run_install: true
 dynamic_smoke_allowed: true
 pentest_verify_allowed: true
-workspace_guard_mode: strict
+workspace_guard_mode: warn
 workspace_guard_markers: package.json,README.md,server.ts,data/static/challenges.yml
 workspace_guard_expect:
 === END CODE_SOURCE_INPUT ===
@@ -130,12 +144,13 @@ workspace_guard_expect:
 **Additional fields:**
 - `dynamic_smoke_allowed: yes` — allows **`browser`** (or curl inside container) against `base_url` when `base_url` + scope block is provided; **only** to upgrade Probable -> Confirmed for **<=2** selected findings; no broad crawling.
 - `pentest_verify_allowed: yes` — allows **`pentester`** to run **one** minimal verification branch within RoE (prioritize Critical/High findings already backed by static evidence); this does not replace full-repo SAST.
-- `workspace_guard_mode: strict` (recommended) | `warn`:
+- `workspace_guard_mode: strict` | `warn` (recommended for local benchmark runs):
   - `strict`: `/work` mismatch => **stop flow**, do not scan, output blocker only.
   - `warn`: continue allowed, but add prominent warning in Metadata.
 - `workspace_guard_markers`: sentinel files used to validate target repo (for example `package.json,server.ts,README.md` for Juice Shop).
 - `workspace_guard_expect`: expected string that must **actually appear** in at least one marker (light grep). Usually from `"name"` in `package.json` or README title — **do not** use folder names like `gband.web` if file contents use a different token (for example npm may use `gband-web`). Keep **empty** (as in sample INPUT) when marker existence + manual fingerprint is enough; this avoids false stops in `strict` mode.
 - `benchmark_mode` (optional): `none` (default) | `owasp_juice_shop` — enables §0.B lab traceability + budget overrides.
+- If `benchmark_mode=none`, the agent may still auto-promote to `effective_benchmark_mode=owasp_juice_shop` when strong lab markers are detected (§0.B).
 
 **Other fields:** same semantics as previous version (`sub_path`, `roe_level`, `internet_allowed`, `run_install`).
 
@@ -146,6 +161,11 @@ workspace_guard_expect:
 ### 2.1) Workspace checks (mandatory)
 - `pwd`, `ls -la /work`, `find /work -maxdepth 3 -type f 2>/dev/null | head -n 50` (enough for fingerprint; do not deep full-tree `find`).
 - Verify repo/commit fingerprint.
+- Parse challenge keys early with a strict extractor (for example YAML `key:` field matcher) and persist the canonical key set for all later matching/coverage gates.
+- Parse challenge keys early and persist canonical set for matching/coverage gates:
+  - If static challenges file exists, use strict YAML `key:` extraction.
+  - Else infer from `solveIf/notSolved/challengeUtils.solveIf` anchor patterns in source code.
+- If marker probe indicates training-lab behavior, switch to challenge-discovery workflow even when operator did not explicitly request benchmark mode.
 - **Workspace Guard (mandatory, run before any scanner):**
   1. Check marker existence in `/work` from `workspace_guard_markers`.
   2. If `workspace_guard_expect` is provided, run light grep in markers to confirm the intended repo.
@@ -268,6 +288,7 @@ Before Phase 1.5, tools may be used (total queries **<=** profile budget; max on
 - Generate report in this order: `Executive Summary` -> `Findings` -> `Coverage Matrix` -> remaining sections.
 - Persist intermediate artifacts to files under `/work` and reuse them; avoid re-deriving the same data in later subtasks.
 - If a final full report regeneration fails once, perform a targeted patch/update to the existing report artifact instead of full regeneration.
+- In benchmark mode, prefer batch tool execution where possible to reduce turn count and lower malformed-call risk.
 
 ---
 ## 6) `rg` SEED PATTERNS (EXPANDED; STILL HIT-CAPPED)
@@ -325,12 +346,16 @@ Only include hits in Evidence **after contextual code reading**.
 6) `## Findings`  
 7) `## Static Coverage Matrix` — columns:  
 `Group | Test Item | Status | Evidence Ref | Notes`  
-7.A) `## Challenge Coverage Matrix` (**mandatory** when `benchmark_mode: owasp_juice_shop` **or** `app_profile: training_lab`) — columns:  
+7.A) `## Challenge Coverage Matrix` (**mandatory** when `benchmark_mode: owasp_juice_shop` **or** `effective_benchmark_mode=owasp_juice_shop` **or** `app_profile: training_lab`) — columns:  
 `challenge_key | challenge_name | handler_files | endpoints | status | evidence_refs`  
-7.B) `## Challenge Coverage Summary` (**mandatory** when `benchmark_mode: owasp_juice_shop` **or** `app_profile: training_lab`) — include:  
+7.B) `## Challenge Coverage Summary` (**mandatory** when `benchmark_mode: owasp_juice_shop` **or** `effective_benchmark_mode=owasp_juice_shop` **or** `app_profile: training_lab`) — include:  
 `total_keys | confirmed_count | probable_count | out_of_scope_count | not_found_count | accounted_count | coverage_percent`
 7.C) `## Evidence Index` (compact, deduplicated) — columns:  
 `evidence_ref_id | file | lines/symbol | short_note`
+7.C.1) `## Challenge Key Source` (**mandatory in lab mode**) — include:
+`key_source: static_file|code_inference | key_source_path_or_pattern | key_confidence_note`
+7.D) `## Benchmark Scorecard` (**mandatory** when `benchmark_mode: owasp_juice_shop`) — include:
+`run_id | model | total_keys | accounted_count | coverage_percent | confirmed_count | probable_count | detection_percent | unmapped_keys_count | hard_fail_gate | pass_or_fail`
 8) `## Dependency & Supply Chain Summary`  
 9) `## Container & CI Signals` (Dockerfile/compose + workflows — concise risk summary, may be `N/A`)  
 10) `## Residual Risks & Assumptions`  
@@ -381,14 +406,27 @@ Finish only when:
 - Phase 0 + Wave A are completed, or blocker is clearly recorded.
 - Matrix **7.A–7.I** has rows (or `Skipped (FAST)` where profile/applicability justifies).
 - Matrix **7.J** has a row when codebase has meaningful API surface.
-- When `benchmark_mode: owasp_juice_shop` **or** `app_profile: training_lab`: **Challenge Coverage Matrix (§7.A)** must include **100%** of `key:` entries from `/work/data/static/challenges.yml` (or `N/A` with explicit reason such as `disabledEnv` not applicable to this run).
+- When `benchmark_mode: owasp_juice_shop` **or** `effective_benchmark_mode=owasp_juice_shop` **or** `app_profile: training_lab`: **Challenge Coverage Matrix (§7.A)** must include **100%** of discovered key set (prefer `/work/data/static/challenges.yml`; fallback to inferred key set with explicit confidence note).
 - **Mandatory challenge accounting gate** (lab mode):
-  1. Parse `/work/data/static/challenges.yml` and count total `key:` entries as `total_keys`.
+  1. Determine key source:
+     - If `/work/data/static/challenges.yml` exists -> parse and count `key:` entries as `total_keys`.
+     - Else -> infer `total_keys` from unique `solveIf/notSolved/challengeUtils.solveIf` keys in code.
   2. `## Challenge Coverage Matrix` must contain **one row per key** (no silent omissions).
   3. Allowed status values are exactly: `Confirmed | Probable | Out of scope | Not found in code`.
   4. Compute:  
      `accounted_count = confirmed_count + probable_count + out_of_scope_count + not_found_count`  
      `coverage_percent = (accounted_count / total_keys) * 100`
   5. **HARD FAIL** if `accounted_count != total_keys` or if any row has an invalid/empty status.
+- **Benchmark pass/fail gate** (mandatory when `benchmark_mode: owasp_juice_shop` or `effective_benchmark_mode=owasp_juice_shop`):
+  1. Compute `detection_percent = ((confirmed_count + probable_count) / total_keys) * 100`.
+  2. Compute `unmapped_keys_count = count(keys with missing handler_files and missing endpoints and no evidence_refs)`.
+  3. Set `hard_fail_gate = true` if any condition holds:
+     - `accounted_count != total_keys`
+     - `coverage_percent < 100`
+     - `detection_percent < 85`
+     - `unmapped_keys_count > 0`
+  4. Set `pass_or_fail = PASS` only when `hard_fail_gate = false`; otherwise `FAIL`.
+  5. Always print explicit gate reasons in `## Benchmark Scorecard`.
+  6. When key source is `code_inference`, append: `confidence_note: inferred-key benchmark (no static key file)` in scorecard.
 - Every **Confirmed/Probable** finding has `Affected` + `Evidence`.
 - No remaining **P0** hit from §6 inside **Top-K (§0.A)** is left unopened (unless budget is exhausted — record residual: "increase `THOROUGH` or reduce `exclude_paths` / increase K").
